@@ -8,11 +8,11 @@ VALUES
 
 
 -- Insert test data for the "product" table
-INSERT INTO "product" ("name", "description", "stock", "price")
+INSERT INTO "product" ("name","image", "description", "stock", "price")
 VALUES
-    ('Product A', 'Description for Product A', 100, 19.99),
-    ('Product B', 'Description for Product B', 50, 29.99),
-    ('Product C', 'Description for Product C', 75, 9.99);
+    ('Product A','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXJTCRGla4zgMAgZJJ7mX6udkkyL1c7lBva0x3jMm6neiAEw55OuIIoQZkkRnE9YyNfGk&usqp=CAU', 'Description for Product A', 100, 19.99),
+    ('Product B','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8HsGaECRBcRwIPKyaGY9Cj04vawwlN9UQsg&usqp=CAU', 'Description for Product B', 50, 29.99),
+    ('Product C','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBRBrH1hsEF4q9CDff2WLgf2DPJKXYO28dpQ&usqp=CAU', 'Description for Product C', 75, 9.99);
 
 -- Insert test data for the "order" table
 INSERT INTO "orders" ("confirmed", "id")

@@ -16,11 +16,15 @@ public class Product {
     @Column(length = 50, nullable = false)
     private String  name;
 
+    @Column(nullable = false)
+    private String  image;
+
     @Column(length = 50, nullable = false)
     private String description;
 
     @Column(length = 50, nullable = false)
     private int stock;
+
     @Column(length = 10, nullable = false)
     private float price;
 }
