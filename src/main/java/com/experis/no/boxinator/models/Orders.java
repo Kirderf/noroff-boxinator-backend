@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -14,10 +12,14 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private Boolean confirmed;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
-    @Column(name="products_id")
-    @OneToMany(mappedBy = "orders")
-    private Set<Products> products;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column( nullable = false)
+    private String status; //TODO make enum
 }

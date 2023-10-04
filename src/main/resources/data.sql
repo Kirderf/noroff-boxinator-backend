@@ -14,19 +14,13 @@ VALUES
     ('Product B','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8HsGaECRBcRwIPKyaGY9Cj04vawwlN9UQsg&usqp=CAU', 'Description for Product B', 50, 29.99),
     ('Product C','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBRBrH1hsEF4q9CDff2WLgf2DPJKXYO28dpQ&usqp=CAU', 'Description for Product C', 75, 9.99);
 
--- Insert test data for the "order" table
-INSERT INTO "orders" ("confirmed", "id")
-VALUES
-    (true, 1),
-    (false, 2),
-    (true, 3);
 
 -- Insert test data for the "products" table
-INSERT INTO "products" ("product_id", "user_id", "quantity", "orders_id")
+INSERT INTO "orders" ("product_id", "user_id", "status")
 VALUES
-    (1, 1, 2, 1),
-    (2, 1, 3, 2),
-    (3, 2, 1, 3);
+    (1, 1, 'færdig' ),
+    (2, 1, 'blir behandlet' ),
+    (3, 2,  'færdig');
 
 -- Insert test data for the "shipment" table
 INSERT INTO "shipment" ("order_id", "destination", "billing_address", "status", "shipping_cost", "delivery_instruction", "gift")
