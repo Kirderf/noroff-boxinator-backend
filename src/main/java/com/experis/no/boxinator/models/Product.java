@@ -27,4 +27,8 @@ public class Product {
 
     @Column(length = 10, nullable = false)
     private float price;
+
+    @ManyToMany
+    private Set<Orders> order;
+
 }

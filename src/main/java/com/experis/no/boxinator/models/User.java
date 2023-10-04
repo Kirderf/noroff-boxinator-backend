@@ -15,12 +15,10 @@ public class User {
 
     @Column(length = 50, nullable = false, unique = true)
     private String  email;
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = true) //TODO trur vi kan ha nullable if role = guest
     private String  username;
     @Column(length = 50, nullable = false)
     private String  roles; //TODO add enum
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = true)
     private String  address;
-    @Column(length = 50, nullable = false)
-    private String  password; //TODO ska dæ hær lagres i db ?
 }
