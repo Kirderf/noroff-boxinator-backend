@@ -9,6 +9,7 @@ import org.hibernate.annotations.Formula;
 @Getter
 @Setter
 public class Products {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -21,11 +22,8 @@ public class Products {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column() //TODO @Formula("(SELECT price FROM product where o.product_id = id)")
-    @Formula("(SELECT price FROM product as p where p.id = id) * 1")
-    private float price;
     @Column( nullable = false)
-    private float quantity;
+    private int quantity;
     @ManyToOne
     @JoinColumn(name = "orders_id")
     private Orders orders;
