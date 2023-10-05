@@ -24,4 +24,6 @@ public class Orders {
 
     @Column( nullable = false)
     private String status; //TODO make enum
+
+    //TODO add timestamp to remove if not made shipment after x amount of time
 }
