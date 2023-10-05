@@ -55,11 +55,11 @@ VALUES
     ( 2,  'færdig');
 
 -- Insert test data for the "shipment" table
-INSERT INTO "shipment" ("order_id", "countries_name", "destination", "billing_address", "status", "delivery_instruction", "gift")
+INSERT INTO "shipment" ("order_id", "countries_name", "destination", "billing_address", "delivery_instruction", "gift")
 VALUES
-    (1, 'Norway' , '123 Shipping St','123 Billing St', 'Shipped',  'Handle with care', false),
-    (2, 'Norway' ,'456 Shipping St','456 Billing St', 'In Transit',  'Fragile items', true),
-    (3, 'Norway' ,'789 Shipping St', '789 Billing St', 'Delivered',  'Leave at the doorstep', false);
+    (1, 'Norway' , '123 Shipping St','123 Billing St',  'Handle with care', false),
+    (2, 'Norway' ,'456 Shipping St','456 Billing St',  'Fragile items', true),
+    (3, 'Norway' ,'789 Shipping St', '789 Billing St',  'Leave at the doorstep', false);
 
 ALTER TABLE  orders_products ADD column quantity integer; --TODO Sjækk om dæ kan fikses bedre.
 
