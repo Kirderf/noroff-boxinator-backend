@@ -26,8 +26,6 @@ public class Shipment {
     private String destination;
     @Column(length = 50, nullable = false)
     private String billingAddress;
-    @Column(length = 50, nullable = false)
-    private String Status; //TODO ADD ENUM
 
     @Column(length = 50)
     private String deliveryInstruction;
