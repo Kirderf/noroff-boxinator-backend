@@ -21,11 +21,11 @@ import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping(path = "api/v1/product")
-public class productController {
+public class ProductController {
     private final ProductService productService;
     private final ProductMapper productMapper;
 
-    public productController(ProductService productService, ProductMapper productMapper) {
+    public ProductController(ProductService productService, ProductMapper productMapper) {
         this.productService = productService;
         this.productMapper = productMapper;
     }
