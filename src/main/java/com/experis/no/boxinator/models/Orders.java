@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,8 +15,8 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToMany
-    private Set<Product> products;
+    @OneToMany(mappedBy = "orders")
+    private Set<OrderProduct> ordersProducts = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
