@@ -16,8 +16,8 @@ public class CountriesServiceImpl implements CountriesService {
     }
 
     @Override
-    public Countries findById(Integer integer) {
-        return countriesRepository.findById(integer).orElseThrow(() -> new CountriesNotFoundException(integer));
+    public Countries findById(String string) {
+        return countriesRepository.findById(string).orElseThrow(() -> new CountriesNotFoundException(string));
     }
 
     @Override
@@ -36,12 +36,13 @@ public class CountriesServiceImpl implements CountriesService {
     }
 
     @Override
-    public void delete(Integer integer) {
-        countriesRepository.deleteById(integer);
+    public void delete(String string) {
+
     }
 
     @Override
-    public boolean exists(Integer integer) {
-        return countriesRepository.existsById(integer);
+    public boolean exists(String string) {
+        return false;
     }
+
 }
