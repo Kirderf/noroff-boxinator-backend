@@ -3,7 +3,6 @@ INSERT INTO "users" ("email", "username", "roles", "address")
 VALUES
     ('user1@example.com', 'user1', 'User', '123 Main St'),
     ('user2@example.com', 'user2', 'User', '456 Elm St'),
-    ('guest@example.com', NULL, 'Guest', NULL),
     ('admin@example.com', 'admin', 'Admin', '789 Oak St');
 
 INSERT INTO countries (full_name, short_name, shipping_cost)
@@ -52,19 +51,19 @@ VALUES
     ( 1, 'færdig'),
     ( 1, 'blir behandlet'),
     ( 3,  'færdig'),
+    ( null,  'færdig'),
     ( 2,  'færdig');
 
 -- Insert test data for the "shipment" table
-INSERT INTO "shipment" ("order_id", "countries_name", "destination", "billing_address", "delivery_instruction", "gift")
+INSERT INTO Shipment
+(order_id, countries_name, destination, billing_address, postal_code, city, phone_number, delivery_instruction, gift)
 VALUES
-    (1, 'Norway' , '123 Shipping St','123 Billing St',  'Handle with care', false),
-    (2, 'Norway' ,'456 Shipping St','456 Billing St',  'Fragile items', true),
-    (3, 'Norway' ,'789 Shipping St', '789 Billing St',  'Leave at the doorstep', false);
+    (1, 'United States of America', '123 Main St', '456 Elm St', 12345, 'New York', 1234567890, 'Leave at front door', true),
+    (2, 'Canada', '789 Maple St', '101 Pine St', 67890, 'Toronto', 2345678901, 'Ring doorbell twice', false),
+    (3, 'United Kingdom', '234 Oak St', '567 Birch St', 11223, 'London', 3456789012, NULL, false);
 
 ALTER TABLE  orders_products ADD column quantity integer; --TODO Sjækk om dæ kan fikses bedre.
 
 insert into orders_products ("orders_id", "products_id", "quantity")
 Values
     (1, 1, 3),(1, 2, 3), (2, 1, 2), (3, 1, 1);
-
--- Assuming you have a table named "countries" with columns "full_name," "short_name," and "shipping_cost"
