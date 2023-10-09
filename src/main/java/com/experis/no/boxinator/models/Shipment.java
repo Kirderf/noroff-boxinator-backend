@@ -18,6 +18,8 @@ public class Shipment {
     @ManyToOne
     @JoinColumn(name = "countries_name")
     private Countries countries;
+    @Column(nullable = false)
+    private String email;
 
     @Column(length = 50, nullable = false)
     private String destination;
