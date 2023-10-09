@@ -6,7 +6,7 @@ import com.experis.no.boxinator.models.User;
 import com.experis.no.boxinator.models.dto.order.OrderDTO;
 import com.experis.no.boxinator.models.dto.order.OrderPostDTO;
 import com.experis.no.boxinator.models.dto.orderProduct.OrderProductDTO;
-import com.experis.no.boxinator.services.OrdersProduct.OrdersProductService;
+import com.experis.no.boxinator.services.OrdersProduct.OrdersProductsServiceImpl;
 import com.experis.no.boxinator.services.product.ProductService;
 import com.experis.no.boxinator.services.user.UserService;
 import org.mapstruct.Mapper;
@@ -26,7 +26,7 @@ public abstract class OrderMapper {
     @Autowired
     protected UserService userService;
     @Autowired
-    protected OrdersProductService ordersProductService;
+    protected OrdersProductsServiceImpl ordersProductsServiceImpl;
 
 
     @Mapping(target = "ordersProducts", qualifiedByName = "orderToOrderProductId")
@@ -47,7 +47,7 @@ public abstract class OrderMapper {
     public List<OrderProductDTO> mapProductToId(Set<OrderProduct> value) {
         if(value == null)
             return null;
-        List<OrderProduct> orderProductList =  value.stream().map(o -> ordersProductService.findById(o.getId())).toList();
+        List<OrderProduct> orderProductList =  value.stream().map(o -> ordersProductsServiceImpl.findById(o.getId())).toList();
         List<OrderProductDTO> orderProductDTOList = new ArrayList<>();
         for (OrderProduct orderProduct : orderProductList) {
             orderProductDTOList.add(new OrderProductDTO(orderProduct.getProductId(), orderProduct.getQuantity()));

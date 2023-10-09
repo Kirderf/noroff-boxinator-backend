@@ -5,6 +5,6 @@ import jakarta.persistence.EntityNotFoundException;
 
 public class OrderProductNotFoundException extends EntityNotFoundException {
     public OrderProductNotFoundException(OrderProduct.OrdersProductsId id){
-        super("OrderProduct was not found with order ID" + id.getOrdersId());
+        super("OrderProduct was not found with order ID " + id.getOrdersId() + "or product ID " + id.getProductsId() );
     }
 }
