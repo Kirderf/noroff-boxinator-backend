@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class ProductController {
                 )
         );
     }
-    @GetMapping("/active")
+    @GetMapping(params = "active")
     @Operation(summary = "Gets all active Products")
     @ApiResponses(value = {
             @ApiResponse(
@@ -61,12 +62,12 @@ public class ProductController {
                     }
             )
     })
-    public ResponseEntity<?> findAllActive() {
-        return ResponseEntity.ok(
-                productMapper.productToProductDTO(
-                        productService.getAllActive()
-                )
-        );
+    public ResponseEntity<?> findAll(@PathParam("active") boolean active) {
+            return ResponseEntity.ok(
+                    productMapper.productToProductDTO(
+                            productService.getAllActive(active)
+                    )
+            );
     }
     @GetMapping("{id}")
     @Operation(summary = "Gets a product by ID")
