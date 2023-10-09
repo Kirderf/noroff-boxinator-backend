@@ -1,11 +1,12 @@
 package com.experis.no.boxinator.controllers;
 
 import com.experis.no.boxinator.exceptions.ProductNotFoundException;
-import com.experis.no.boxinator.mappers.UserMapper;
-import com.experis.no.boxinator.models.User;
-import com.experis.no.boxinator.models.dto.user.UserDTO;
-import com.experis.no.boxinator.models.dto.user.UserPostDTO;
-import com.experis.no.boxinator.services.user.UserService;
+import com.experis.no.boxinator.mappers.OrderMapper;
+import com.experis.no.boxinator.models.Orders;
+import com.experis.no.boxinator.models.dto.order.OrderDTO;
+import com.experis.no.boxinator.models.dto.order.OrderPostDTO;
+import com.experis.no.boxinator.models.dto.product.ProductDTO;
+import com.experis.no.boxinator.services.orders.OrdersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,43 +21,44 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping(path = "api/v1/user")
-public class UserController {
-    private final UserService userService;
-    private final UserMapper userMapper;
+@RequestMapping(path = "api/v1/order")
+public class OrderController {
+    private final OrdersService ordersService;
+    private final OrderMapper orderMapper;
 
-    public UserController(UserService userService, UserMapper userMapper) {
-        this.userService = userService;
-        this.userMapper = userMapper;
+
+    public OrderController(OrdersService ordersService, OrderMapper orderMapper) {
+        this.ordersService = ordersService;
+        this.orderMapper = orderMapper;
     }
     @GetMapping
-    @Operation(summary = "Gets all Users")
+    @Operation(summary = "Gets all Orders")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "Success",
                     content = {
                             @Content(mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+                                    array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))
                     }
             )
     })
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(
-                userMapper.userToUserDTO(
-                        userService.findAll()
+                orderMapper.orderToOrderDTO(
+                        ordersService.findAll()
                 )
         );
     }
     @GetMapping("{id}")
-    @Operation(summary = "Gets a user by ID")
+    @Operation(summary = "Gets a order by ID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "Success",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = UserDTO.class))
+                                    schema = @Schema(implementation = OrderDTO.class))
                     }
             ),
             @ApiResponse(
@@ -69,8 +71,8 @@ public class UserController {
     public ResponseEntity<?> findById(@PathVariable int id) {
         try {
             return ResponseEntity.ok(
-                    userMapper.userToUserDTO(
-                            userService.findById(id)
+                    orderMapper.orderToOrderDTO(
+                            ordersService.findById(id)
                     )
 
             );
@@ -79,7 +81,7 @@ public class UserController {
         }
     }
     @PostMapping
-    @Operation(summary = "Adds a new user")
+    @Operation(summary = "Adds a new product")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
@@ -87,10 +89,9 @@ public class UserController {
                     content = @Content
             )
     })
-    public ResponseEntity<?> add(@RequestBody UserPostDTO entity) throws URISyntaxException {
-        User user = userService.add(userMapper.userPostDTOToUser(entity));
-        URI uri = new URI("api/v1/user/" + user.getId());
+    public ResponseEntity<?> add(@RequestBody OrderPostDTO entity) throws URISyntaxException {
+        Orders orders = ordersService.add(orderMapper.ordersPostDTOToOrders(entity));
+        URI uri = new URI("api/v1/order/" + orders.getId());
         return ResponseEntity.created(uri).build();
     }
-
 }

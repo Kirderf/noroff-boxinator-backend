@@ -12,4 +12,5 @@ public class ProductDTO {
     private String description;
     private String name;
     private String image;
+    private boolean isActive;
 }
