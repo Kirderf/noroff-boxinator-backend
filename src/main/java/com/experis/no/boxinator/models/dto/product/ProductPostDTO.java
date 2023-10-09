@@ -11,4 +11,5 @@ public class ProductPostDTO {
     private String description;
     private String name;
     private String image;
+    private boolean isActive;
 }

@@ -6,6 +6,7 @@ import com.experis.no.boxinator.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+
 @Service
 public class ProductServiceImpl implements ProductService{
     private final ProductRepository productRepository;
@@ -42,5 +43,10 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public boolean exists(Integer integer) {
         return productRepository.existsById(integer);
+    }
+
+    @Override
+    public Collection<Product> getAllActive() {
+        return productRepository.getProductsByisActiveIsTrue();
     }
 }

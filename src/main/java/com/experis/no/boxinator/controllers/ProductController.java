@@ -49,6 +49,25 @@ public class ProductController {
                 )
         );
     }
+    @GetMapping("/active")
+    @Operation(summary = "Gets all active Products")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))
+                    }
+            )
+    })
+    public ResponseEntity<?> findAllActive() {
+        return ResponseEntity.ok(
+                productMapper.productToProductDTO(
+                        productService.getAllActive()
+                )
+        );
+    }
     @GetMapping("{id}")
     @Operation(summary = "Gets a product by ID")
     @ApiResponses(value = {

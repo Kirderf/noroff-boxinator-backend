@@ -27,4 +27,7 @@ public class Product {
     @Column(length = 10, nullable = false)
     private float price;
 
+    @Column(nullable = false)
+    private boolean isActive;
+
 }
