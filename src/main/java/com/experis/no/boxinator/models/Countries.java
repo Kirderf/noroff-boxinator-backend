@@ -10,11 +10,11 @@ import lombok.Setter;
 public class Countries {
     @Id
     @Column(nullable = false)
-    private String full_name;
+    private String shortName;
 
     @Column(nullable = false)
-    private String short_name;
+    private String fullName;
 
     @Column(nullable = false)
-    private int shipping_cost;
+    private int shippingCost;
 }

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CountriesDTO {
-    private String full_name;
-    private String short_name;
-    private int shipping_cost; //TODO fix
+    private String shortName;
+    private String fullName;
+    private int shippingCost; //TODO fix
 }
