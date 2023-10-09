@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
 @Entity
 @Getter
 @Setter
@@ -28,5 +27,7 @@ public class Product {
     @Column(length = 10, nullable = false)
     private float price;
 
+    @Column(nullable = false)
+    private boolean isActive;
 
 }

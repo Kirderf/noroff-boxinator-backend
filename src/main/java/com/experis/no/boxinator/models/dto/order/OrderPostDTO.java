@@ -5,12 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-
-
 @Getter
 @Setter
-public class OrderDTO {
-    private int id;
+public class OrderPostDTO {
     private int user;
     private List<OrderProductDTO> ordersProducts;
     private String status;
