@@ -48,11 +48,11 @@ VALUES
 -- Insert test data for the "products" table
 INSERT INTO "orders" ("user_id", "status")
 VALUES
-    ( 1, 'færdig'),
-    ( 1, 'blir behandlet'),
-    ( 3,  'færdig'),
-    ( null,  'færdig'),
-    ( 2,  'færdig');
+    ( 1, 0),
+    ( 1, 1),
+    ( 3, 2),
+    ( null, 3),
+    ( 2, 1);
 
 -- Insert test data for the "shipment" table
 INSERT INTO Shipment
