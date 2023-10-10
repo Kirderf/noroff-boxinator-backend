@@ -10,5 +10,4 @@ import java.util.List;
 public class OrderPostDTO {
     private int user;
     private List<OrderProductDTO> ordersProducts;
-    private String status;
 }

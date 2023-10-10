@@ -10,5 +10,4 @@ public class OrderWithProductsDTO {
     private int id;
     private int user;
     private List<OrderProductWithFullProductDTO> ordersProducts;
-    private String status;
 }

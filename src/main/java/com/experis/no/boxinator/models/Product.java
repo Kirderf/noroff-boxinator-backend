@@ -30,4 +30,17 @@ public class Product {
     @Column(nullable = false)
     private boolean isActive;
 
+    @Column(nullable = false)
+    private int width;
+
+    @Column(nullable = false)
+    private int depth;
+
+    @Column(nullable = false)
+    private int height;
+
+    @Column(nullable = false)
+    private int weight;
+
+
 }

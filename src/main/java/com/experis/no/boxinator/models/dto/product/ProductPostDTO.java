@@ -12,4 +12,8 @@ public class ProductPostDTO {
     private String name;
     private String image;
     private boolean isActive;
+    private int width;
+    private int height;
+    private int depth;
+    private int weight;
 }

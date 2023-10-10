@@ -38,21 +38,17 @@ VALUES
 
 
 -- Insert test data for the "product" table
-INSERT INTO "product" ("name","image", "description", "stock", "price", "is_active")
+INSERT INTO "product" ("name","image", "description", "stock", "price", "is_active","width","height","depth","weight")
 VALUES
-    ('Product A','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXJTCRGla4zgMAgZJJ7mX6udkkyL1c7lBva0x3jMm6neiAEw55OuIIoQZkkRnE9YyNfGk&usqp=CAU', 'Description for Product A', 100, 19.99,true),
-    ('Product B','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8HsGaECRBcRwIPKyaGY9Cj04vawwlN9UQsg&usqp=CAU', 'Description for Product B', 50, 29.99,false),
-    ('Product C','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBRBrH1hsEF4q9CDff2WLgf2DPJKXYO28dpQ&usqp=CAU', 'Description for Product C', 75, 9.99,true);
+    ('Product A','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXJTCRGla4zgMAgZJJ7mX6udkkyL1c7lBva0x3jMm6neiAEw55OuIIoQZkkRnE9YyNfGk&usqp=CAU', 'Description for Product A', 100, 19.99,true,1,0,0,0),
+    ('Product B','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8HsGaECRBcRwIPKyaGY9Cj04vawwlN9UQsg&usqp=CAU', 'Description for Product B', 50, 29.99,false,0,2,0,0),
+    ('Product C','https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBRBrH1hsEF4q9CDff2WLgf2DPJKXYO28dpQ&usqp=CAU', 'Description for Product C', 75, 9.99,true,0,0,3,0);
 
 
 -- Insert test data for the "products" table
 INSERT INTO "orders" ("user_id")
 VALUES
-    ( 1),
-    ( 1),
-    ( 3),
-    ( NULL),
-    ( 2);
+    (1),(1),(3),(NULL),(2);
 
 -- Insert test data for the "shipment" table
 INSERT INTO Shipment
