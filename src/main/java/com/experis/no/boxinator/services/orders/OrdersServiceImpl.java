@@ -24,6 +24,10 @@ public class OrdersServiceImpl implements OrdersService{
     public Collection<Orders> findAll() {
         return ordersRepository.findAll();
     }
+    @Override
+    public Collection<Orders> findAllByUserId(int userId) {
+        return ordersRepository.getOrderByUserId(userId);
+    }
 
     @Override
     public Orders add(Orders entity) {
