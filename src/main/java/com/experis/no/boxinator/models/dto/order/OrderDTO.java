@@ -13,5 +13,5 @@ public class OrderDTO {
     private int id;
     private int user;
     private List<OrderProductDTO> ordersProducts;
-    private String status;
+
 }
