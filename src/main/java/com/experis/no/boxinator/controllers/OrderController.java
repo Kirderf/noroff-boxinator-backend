@@ -78,6 +78,28 @@ public class OrderController {
                     )
             );
     }
+    @GetMapping(params = "userId")
+    @Operation(summary = "Gets all order for a given user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = OrderProductWithFullProductDTO.class)))
+                    }
+            )
+    })
+    public ResponseEntity<?> findAllFromUserId(@PathParam("userId") int userId) {
+        if(userId != 0)
+            return ResponseEntity.ok(
+                    orderMapper.orderToOrderDTO(
+                            ordersService.findAllByUserId(userId)
+                    )
+            );
+        else
+            return ResponseEntity.badRequest().build();
+    }
     @GetMapping("{id}")
     @Operation(summary = "Gets a order by ID")
     @ApiResponses(value = {
