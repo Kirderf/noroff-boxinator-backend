@@ -23,9 +23,6 @@ public class Orders {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
-    private Status status;
-
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp timestamp;
 }

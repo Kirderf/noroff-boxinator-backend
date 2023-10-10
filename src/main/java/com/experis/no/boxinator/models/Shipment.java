@@ -3,6 +3,9 @@ package com.experis.no.boxinator.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.sql.Timestamp;
+
 @Entity
 @Getter
 @Setter
@@ -34,5 +37,7 @@ public class Shipment {
     private String deliveryInstruction;
     @Column(nullable = false)
     private Boolean gift;
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp timestamp;
 }
 
