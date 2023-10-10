@@ -127,7 +127,7 @@ public class OrderController {
         }
     }
     @PostMapping
-    @Operation(summary = "Adds a new product")
+    @Operation(summary = "Adds a new order")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
