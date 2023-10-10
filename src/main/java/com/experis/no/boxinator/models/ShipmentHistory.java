@@ -14,9 +14,9 @@ public class ShipmentHistory {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int id;
         @Column(nullable = false)
-        private String status; //TODO ADD ENUM
+        private Status status;
 
-        @Column(nullable = false)
+        @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
         private Timestamp timestamp;
 
         @ManyToOne

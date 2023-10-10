@@ -44,4 +44,9 @@ public class ShipmentServiceImpl implements ShipmentService{
     public boolean exists(Integer integer) {
         return shipmentRepository.existsById(integer);
     }
+
+    @Override
+    public Collection<Shipment> findByEmail(String email) {
+        return shipmentRepository.findShipmentsByEmailIgnoreCase(email);
+    }
 }

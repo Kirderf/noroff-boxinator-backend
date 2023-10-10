@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,8 +23,9 @@ public class Orders {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column( nullable = false)
-    private String status; //TODO make enum
+    @Column(nullable = false)
+    private Status status;
 
-    //TODO add timestamp to remove if not made shipment after x amount of time
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp timestamp;
 }

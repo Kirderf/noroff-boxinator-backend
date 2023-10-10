@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ShipmentDTO {
-    private int id;
+public class ShipmentPostDTO {
     private String email;
     private Integer order;
     private String billingAddress;
