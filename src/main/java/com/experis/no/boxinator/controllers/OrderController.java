@@ -45,38 +45,20 @@ public class OrderController {
                     }
             )
     })
-    public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(
-                orderMapper.orderToOrderDTO(
-                        ordersService.findAll()
-                )
-        );
-    }
-    @GetMapping(params = "fullProduct")
-    @Operation(summary = "Gets all order with full product")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Success",
-                    content = {
-                            @Content(mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = OrderProductWithFullProductDTO.class)))
-                    }
-            )
-    })
-    public ResponseEntity<?> findAll(@PathParam("fullProduct") boolean fullProduct) {
-        if(fullProduct)
-            return ResponseEntity.ok(
-                    orderMapper.orderWithProductsDTO(
-                            ordersService.findAll()
-                    )
-            );
-        else
+    public ResponseEntity<?> findAll(@RequestParam(required = false) Boolean fullProduct) {
+        if(fullProduct == null ) fullProduct = false;
+        if(!fullProduct)
             return ResponseEntity.ok(
                     orderMapper.orderToOrderDTO(
                             ordersService.findAll()
                     )
             );
+        else
+            return ResponseEntity.ok(
+                orderMapper.orderWithProductsDTO(
+                        ordersService.findAll()
+                )
+        );
     }
     @GetMapping(params = "userId")
     @Operation(summary = "Gets all order for a given user")
@@ -90,15 +72,21 @@ public class OrderController {
                     }
             )
     })
-    public ResponseEntity<?> findAllFromUserId(@PathParam("userId") int userId) {
-        if(userId != 0)
+    public ResponseEntity<?> findAllFromUserId(@PathParam("userId") int userId, @RequestParam(required = false) Boolean fullProduct) {
+        if(fullProduct == null ) fullProduct = false;
+        if(!fullProduct)
             return ResponseEntity.ok(
                     orderMapper.orderToOrderDTO(
                             ordersService.findAllByUserId(userId)
                     )
             );
-        else
-            return ResponseEntity.badRequest().build();
+        else{
+            return ResponseEntity.ok(
+                    orderMapper.orderWithProductsDTO(
+                            ordersService.findAllByUserId(userId)
+                    )
+            );
+        }
     }
     @GetMapping("{id}")
     @Operation(summary = "Gets a order by ID")
@@ -118,14 +106,22 @@ public class OrderController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    public ResponseEntity<?> findById(@PathVariable int id) {
+    public ResponseEntity<?> findById(@PathVariable int id, @RequestParam(required = false) Boolean fullProduct) {
         try {
-            return ResponseEntity.ok(
-                    orderMapper.orderToOrderDTO(
-                            ordersService.findById(id)
-                    )
+            if(fullProduct == null ) fullProduct = false;
+            if(!fullProduct)
+                return ResponseEntity.ok(
+                        orderMapper.orderToOrderDTO(
+                                ordersService.findById(id)
+                        )
 
-            );
+                );
+            else
+                return ResponseEntity.ok(
+                        orderMapper.orderWithProductsDTO(
+                                ordersService.findById(id)
+                        )
+                );
         } catch (ProductNotFoundException productNotFoundException) {
             return ResponseEntity.notFound().build();
         }
