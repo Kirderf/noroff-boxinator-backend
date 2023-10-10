@@ -5,6 +5,7 @@ import com.experis.no.boxinator.mappers.OrderMapper;
 import com.experis.no.boxinator.models.Orders;
 import com.experis.no.boxinator.models.dto.order.OrderDTO;
 import com.experis.no.boxinator.models.dto.order.OrderPostDTO;
+import com.experis.no.boxinator.models.dto.orderProduct.OrderProductWithFullProductDTO;
 import com.experis.no.boxinator.models.dto.product.ProductDTO;
 import com.experis.no.boxinator.services.orders.OrdersService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +51,32 @@ public class OrderController {
                         ordersService.findAll()
                 )
         );
+    }
+    @GetMapping(params = "fullProduct")
+    @Operation(summary = "Gets all order with full product")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = OrderProductWithFullProductDTO.class)))
+                    }
+            )
+    })
+    public ResponseEntity<?> findAll(@PathParam("fullProduct") boolean fullProduct) {
+        if(fullProduct)
+            return ResponseEntity.ok(
+                    orderMapper.orderWithProductsDTO(
+                            ordersService.findAll()
+                    )
+            );
+        else
+            return ResponseEntity.ok(
+                    orderMapper.orderToOrderDTO(
+                            ordersService.findAll()
+                    )
+            );
     }
     @GetMapping("{id}")
     @Operation(summary = "Gets a order by ID")
