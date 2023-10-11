@@ -1,11 +1,14 @@
 package com.experis.no.boxinator.controllers;
 
 import com.experis.no.boxinator.exceptions.ShipmentNotFoundException;
+import com.experis.no.boxinator.mappers.ShipmentHistoryMapper;
 import com.experis.no.boxinator.mappers.ShipmentMapper;
 import com.experis.no.boxinator.models.Shipment;
+import com.experis.no.boxinator.models.ShipmentHistory;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentDTO;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentPostDTO;
 import com.experis.no.boxinator.services.shipment.ShipmentService;
+import com.experis.no.boxinator.services.shipmenthistory.ShipmentHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,11 +26,15 @@ import java.net.URISyntaxException;
 @RequestMapping(path = "api/v1/shipment")
 public class ShipmentController {
     private final ShipmentService shipmentService;
+    private final ShipmentHistoryService historyService;
     private final ShipmentMapper shipmentMapper;
+    private final ShipmentHistoryMapper historyMapper;
 
-    public ShipmentController(ShipmentService shipmentService, ShipmentMapper shipmentMapper) {
+    public ShipmentController(ShipmentService shipmentService, ShipmentHistoryService historyService, ShipmentMapper shipmentMapper, ShipmentHistoryMapper historyMapper) {
         this.shipmentService = shipmentService;
+        this.historyService = historyService;
         this.shipmentMapper = shipmentMapper;
+        this.historyMapper = historyMapper;
     }
 
     @GetMapping
@@ -53,7 +60,7 @@ public class ShipmentController {
             } catch (ShipmentNotFoundException shipmentNotFoundException) {
                 return ResponseEntity.notFound().build();
             }
-        }else {
+        } else {
             return ResponseEntity.ok(
                     shipmentMapper.shipmentToShipmentDTO(
                             shipmentService.findAll()
@@ -112,6 +119,7 @@ public class ShipmentController {
         }
         return ResponseEntity.created(uri).build();
     }
+
     @PatchMapping
     @Operation(summary = "Update a Shipment")
     @ApiResponses(value = {
@@ -130,12 +138,43 @@ public class ShipmentController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    public ResponseEntity<?> updateShipment(@RequestBody ShipmentDTO entity){
+    public ResponseEntity<?> updateShipment(@RequestBody ShipmentDTO entity) {
         try {
             return ResponseEntity.ok(
                     shipmentMapper.shipmentToShipmentDTO(
                             shipmentService.update(shipmentMapper.shipmentDTOToShipment(entity))
                     )
+
+            );
+        } catch (ShipmentNotFoundException shipmentNotFoundException) {
+            return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("{id}/history")
+    @Operation(summary = "Gets a Shipments History by ID")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ShipmentHistory.class))
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    public ResponseEntity<?> findHistoryById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(
+                    historyMapper.shipmentHistoryToShipmentHistoryDTO(historyService.findAllByShipmentID(id))
 
             );
         } catch (ShipmentNotFoundException shipmentNotFoundException) {

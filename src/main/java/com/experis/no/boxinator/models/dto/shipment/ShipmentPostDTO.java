@@ -12,6 +12,9 @@ public class ShipmentPostDTO {
     private String deliveryInstruction;
     private String destination;
     private String countries;
+    private String city;
+    private long phoneNumber;
+    private int postalCode;
     private String status;
     private Boolean gift;
 }
