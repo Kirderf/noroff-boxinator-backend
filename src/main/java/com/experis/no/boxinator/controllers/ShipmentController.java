@@ -7,6 +7,7 @@ import com.experis.no.boxinator.models.Shipment;
 import com.experis.no.boxinator.models.ShipmentHistory;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentDTO;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentPostDTO;
+import com.experis.no.boxinator.models.dto.shipmentHistory.ShipmentHistoryDTO;
 import com.experis.no.boxinator.services.shipment.ShipmentService;
 import com.experis.no.boxinator.services.shipmenthistory.ShipmentHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,7 +78,7 @@ public class ShipmentController {
                     description = "Success",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ShipmentDTO.class))
+                                    schema = @Schema(implementation = ShipmentHistoryDTO.class))
                     }
             ),
             @ApiResponse(
