@@ -13,10 +13,11 @@ public class ShipmentHistory {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int id;
-        @Column(nullable = false)
-        private Status status;
 
-        @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+        @Column(nullable = false)
+        private int status;
+
+        @Column(nullable = false)
         private Timestamp timestamp;
 
         @ManyToOne

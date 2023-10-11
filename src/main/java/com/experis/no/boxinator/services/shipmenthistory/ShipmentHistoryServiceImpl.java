@@ -44,4 +44,9 @@ public class ShipmentHistoryServiceImpl implements ShipmentHistoryService{
     public boolean exists(Integer integer) {
         return shipmentHistoryRepository.existsById(integer);
     }
+
+    @Override
+    public Collection<ShipmentHistory> findAllByShipmentID(Integer id) {
+        return shipmentHistoryRepository.getAllByShipment_Id(id);
+    }
 }
