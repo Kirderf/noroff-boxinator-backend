@@ -13,8 +13,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findById(Integer integer) {
-        return userRepository.findById(integer).orElseThrow(() -> new UserNotFoundException(integer));
+    public User findById(String uid) {
+        return userRepository.findById(uid).orElseThrow(() -> new UserNotFoundException(uid));
     }
 
     @Override
@@ -33,12 +33,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void delete(Integer integer) {
-        userRepository.deleteById(integer);
+    public void delete(String id) {
+        userRepository.deleteById(id);
     }
 
     @Override
-    public boolean exists(Integer integer) {
-        return userRepository.existsById(integer);
+    public boolean exists(String id) {
+        return userRepository.existsById(id);
     }
 }

@@ -25,11 +25,8 @@ public class SecurityConfiguration {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        // Specify paths where public access is allowed
-                        .requestMatchers("/api/v1/resources/public").permitAll()
-                        // api/v1/resources/authorized 403
                         .requestMatchers("/api/v1/resources/authorized").hasRole("USER")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .oauth2ResourceServer((oauth2)-> oauth2
                         .jwt((jwt)-> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         return http.build();
@@ -39,6 +36,12 @@ public class SecurityConfiguration {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
             List<GrantedAuthority> authorities = new ArrayList<>();
+
+            //Get ID from jwtToken
+            String userId = jwt.getClaim("sub");
+            if (userId != null) {
+                authorities.add(new SimpleGrantedAuthority("ID_" + userId));
+            }
             // Get realm_access claim
             Map<String, Object> realmAccess = jwt.getClaim("realm_access");
             if (realmAccess != null) {

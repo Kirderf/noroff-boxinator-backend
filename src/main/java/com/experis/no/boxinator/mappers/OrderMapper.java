@@ -48,7 +48,7 @@ public abstract class OrderMapper {
     public abstract Orders ordersPostDTOToOrders(OrderPostDTO orderPostDTO);
 
     @Named(value = "userIdToUser")
-    public User mapIdsToUser(Integer id){
+    public User mapIdsToUser(String id){
         if(id==null){
             return null;
         }

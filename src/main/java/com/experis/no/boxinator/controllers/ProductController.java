@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -108,6 +109,7 @@ public class ProductController {
                     content = @Content
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> add(@RequestBody ProductPostDTO entity) throws URISyntaxException {
         Product product = productService.add(productMapper.productPostDTOToProduct(entity));
         URI uri = new URI("api/v1/product/" + product.getId());

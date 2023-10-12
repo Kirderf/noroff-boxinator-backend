@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -50,6 +51,7 @@ public class ShipmentController {
                     }
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll(@RequestParam(required = false) String email) {
         if (email != null) {
             try {

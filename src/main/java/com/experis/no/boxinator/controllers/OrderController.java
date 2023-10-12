@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -45,6 +46,7 @@ public class OrderController {
                     }
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll(@RequestParam(required = false) Boolean fullProduct) {
         if(fullProduct == null ) fullProduct = false;
         if(!fullProduct)
@@ -72,6 +74,7 @@ public class OrderController {
                     }
             )
     })
+    @PreAuthorize("hasAuthority('ID_' + #userId) or hasRole('ADMIN')")
     public ResponseEntity<?> findAllFromUserId(@PathParam("userId") String userId, @RequestParam(required = false) Boolean fullProduct) {
         if(fullProduct == null ) fullProduct = false;
         if(!fullProduct)
