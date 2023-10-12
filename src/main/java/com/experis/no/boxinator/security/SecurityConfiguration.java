@@ -28,8 +28,7 @@ public class SecurityConfiguration {
                         // Specify paths where public access is allowed
                         .requestMatchers("/api/v1/resources/public").permitAll()
                         // api/v1/resources/authorized 403
-                        .requestMatchers("/api/v1/resources/*").hasRole("USER")
-
+                        .requestMatchers("/api/v1/resources/authorized").hasRole("USER")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2)-> oauth2
                         .jwt((jwt)-> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
