@@ -61,4 +61,9 @@ public class ShipmentServiceImpl implements ShipmentService {
     public Collection<Shipment> findByEmail(String email) {
         return shipmentRepository.findShipmentsByEmailIgnoreCase(email);
     }
+
+    @Override
+    public Collection<Shipment> findByUserID(String userID) {
+        return shipmentRepository.findShipmentsByUserId(userID);
+    }
 }

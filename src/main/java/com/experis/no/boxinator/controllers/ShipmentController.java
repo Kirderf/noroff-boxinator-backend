@@ -73,7 +73,7 @@ public class ShipmentController {
     }
 
     @GetMapping("{id}")
-    @Operation(summary = "Gets a Shipment by ID")
+    @Operation(summary = "Gets a Shipment by UserID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -90,11 +90,12 @@ public class ShipmentController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    public ResponseEntity<?> findById(@PathVariable int id) {
+    @PreAuthorize("hasAuthority('ID_' + #id) or hasRole('ADMIN')")
+    public ResponseEntity<?> findByUserId(@PathVariable String id) {
         try {
             return ResponseEntity.ok(
                     shipmentMapper.shipmentToShipmentDTO(
-                            shipmentService.findById(id)
+                            shipmentService.findByUserID(id)
                     )
 
             );
