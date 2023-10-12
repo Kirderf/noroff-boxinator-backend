@@ -72,7 +72,7 @@ public class OrderController {
                     }
             )
     })
-    public ResponseEntity<?> findAllFromUserId(@PathParam("userId") int userId, @RequestParam(required = false) Boolean fullProduct) {
+    public ResponseEntity<?> findAllFromUserId(@PathParam("userId") String userId, @RequestParam(required = false) Boolean fullProduct) {
         if(fullProduct == null ) fullProduct = false;
         if(!fullProduct)
             return ResponseEntity.ok(

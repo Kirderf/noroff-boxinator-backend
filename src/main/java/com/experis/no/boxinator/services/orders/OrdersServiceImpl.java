@@ -25,7 +25,7 @@ public class OrdersServiceImpl implements OrdersService{
         return ordersRepository.findAll();
     }
     @Override
-    public Collection<Orders> findAllByUserId(int userId) {
+    public Collection<Orders> findAllByUserId(String userId) {
         return ordersRepository.getOrderByUserId(userId);
     }
 

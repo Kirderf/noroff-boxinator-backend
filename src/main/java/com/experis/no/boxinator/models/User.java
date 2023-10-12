@@ -10,15 +10,15 @@ import lombok.Setter;
 @Entity(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(nullable = false, unique = true)
+    private String id;
 
     @Column(length = 50, nullable = false, unique = true)
     private String  email;
-    @Column(length = 50, nullable = true) //TODO trur vi kan ha nullable if role = guest
+    @Column(length = 50, nullable = false)
     private String  username;
     @Column(length = 50, nullable = false)
-    private String  roles; //TODO add enum
-    @Column(length = 50, nullable = true)
+    private String  roles;
+    @Column(length = 50, nullable = false)
     private String  address;
 }
