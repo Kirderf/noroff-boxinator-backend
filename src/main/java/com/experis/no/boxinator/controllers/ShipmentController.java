@@ -183,6 +183,7 @@ public class ShipmentController {
     @PreAuthorize("hasAuthority('ID_' + #uid) or hasRole('ADMIN')")
     public ResponseEntity<?> findHistoryById(@PathVariable int id, String uid) {
         try {
+            //Check if the user has the right access
             if (!hasUserRole("ADMIN")) {
                 boolean shipmentFoundWithUserID = false;
                 Collection<Shipment> shipments = shipmentService.findByUserID(uid);
