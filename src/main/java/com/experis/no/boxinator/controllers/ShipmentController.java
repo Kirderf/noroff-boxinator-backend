@@ -19,10 +19,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 
 @RestController
 @RequestMapping(path = "api/v1/shipment")
@@ -142,6 +146,7 @@ public class ShipmentController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateShipment(@RequestBody ShipmentDTO entity) {
         try {
             return ResponseEntity.ok(
@@ -175,8 +180,25 @@ public class ShipmentController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    public ResponseEntity<?> findHistoryById(@PathVariable int id) {
+    @PreAuthorize("hasAuthority('ID_' + #uid) or hasRole('ADMIN')")
+    public ResponseEntity<?> findHistoryById(@PathVariable int id, String uid) {
         try {
+            if (!hasUserRole("ADMIN")) {
+                boolean shipmentFoundWithUserID = false;
+                Collection<Shipment> shipments = shipmentService.findByUserID(uid);
+                if (shipments == null) {
+                    throw new ShipmentNotFoundException(id);
+                }
+                for (Shipment shipment : shipments) {
+                    if (shipment.getId() == id) {
+                        shipmentFoundWithUserID = true;
+                        break;
+                    }
+                }
+                if (!shipmentFoundWithUserID) {
+                    throw new ShipmentNotFoundException(id);
+                }
+            }
             return ResponseEntity.ok(
                     historyMapper.shipmentHistoryToShipmentHistoryDTO(historyService.findAllByShipmentID(id))
 
@@ -185,4 +207,19 @@ public class ShipmentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    private boolean hasUserRole(String role) {
+        // Get the current authentication
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getAuthorities() != null) {
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                if (("ROLE_" + role).equals(authority.getAuthority())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
