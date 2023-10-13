@@ -87,11 +87,14 @@ public class UserController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Created",
-                    content = @Content
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDTO.class))
+                    }
             )
     })
-    public ResponseEntity<?> add(@RequestBody UserPostDTO entity) throws URISyntaxException {
-        User user = userService.add(userMapper.userPostDTOToUser(entity));
+    public ResponseEntity<?> add(@RequestBody UserDTO entity) throws URISyntaxException {
+        User user = userService.add(userMapper.userDTOToUser(entity));
         URI uri = new URI("api/v1/user/" + user.getId());
         return ResponseEntity.created(uri).build();
     }
