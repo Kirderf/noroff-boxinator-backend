@@ -8,5 +8,5 @@ import java.util.Collection;
 
 @Repository
 public interface OrdersRepository extends JpaRepository<Orders,Integer> {
-    Collection<Orders> getOrderByUserId(int userId);
+    Collection<Orders> getOrderByUserId(String userId);
 }

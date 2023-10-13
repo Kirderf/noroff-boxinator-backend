@@ -7,4 +7,5 @@ import java.util.Collection;
 
 public interface ShipmentService extends CrudService<Shipment,Integer> {
     Collection<Shipment> findByEmail(String email);
+    Collection<Shipment> findByUserID(String userID);
 }

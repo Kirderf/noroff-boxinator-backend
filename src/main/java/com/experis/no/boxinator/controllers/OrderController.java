@@ -1,5 +1,6 @@
 package com.experis.no.boxinator.controllers;
 
+import com.experis.no.boxinator.exceptions.OrdersNotFoundException;
 import com.experis.no.boxinator.exceptions.ProductNotFoundException;
 import com.experis.no.boxinator.mappers.OrderMapper;
 import com.experis.no.boxinator.models.Orders;
@@ -17,10 +18,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(path = "api/v1/order")
@@ -45,6 +51,7 @@ public class OrderController {
                     }
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll(@RequestParam(required = false) Boolean fullProduct) {
         if(fullProduct == null ) fullProduct = false;
         if(!fullProduct)
@@ -72,7 +79,8 @@ public class OrderController {
                     }
             )
     })
-    public ResponseEntity<?> findAllFromUserId(@PathParam("userId") int userId, @RequestParam(required = false) Boolean fullProduct) {
+    @PreAuthorize("hasAuthority('ID_' + #userId) or hasRole('ADMIN')")
+    public ResponseEntity<?> findAllFromUserId(@PathParam("userId") String userId, @RequestParam(required = false) Boolean fullProduct) {
         if(fullProduct == null ) fullProduct = false;
         if(!fullProduct)
             return ResponseEntity.ok(
@@ -106,8 +114,28 @@ public class OrderController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    public ResponseEntity<?> findById(@PathVariable int id, @RequestParam(required = false) Boolean fullProduct) {
+    @PreAuthorize("hasAuthority('ID_' + #uid) or hasRole('ADMIN')")
+    public ResponseEntity<?> findById(@PathVariable int id, @RequestParam(required = false) Boolean fullProduct, String uid) {
         try {
+            //check if user has the right access to this method
+            boolean foundUserWithUid = false;
+            if (!hasUserRole("ADMIN")){
+                Orders order = ordersService.findById(id);
+                if (order != null) {
+                    if (order.getUser() != null){
+                        foundUserWithUid = (order.getUser().getId().equals(uid));
+                    }else {
+                        throw new OrdersNotFoundException(id);
+                    }
+                }else{
+                    throw new OrdersNotFoundException(id);
+                }
+                if (!foundUserWithUid){
+                    throw new OrdersNotFoundException(id);
+                }
+            }
+
+
             if(fullProduct == null ) fullProduct = false;
             if(!fullProduct)
                 return ResponseEntity.ok(
@@ -122,7 +150,7 @@ public class OrderController {
                                 ordersService.findById(id)
                         )
                 );
-        } catch (ProductNotFoundException productNotFoundException) {
+        } catch (OrdersNotFoundException ordersNotFoundException) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -139,5 +167,19 @@ public class OrderController {
         Orders orders = ordersService.add(orderMapper.ordersPostDTOToOrders(entity));
         URI uri = new URI("api/v1/order/" + orders.getId());
         return ResponseEntity.created(uri).build();
+    }
+
+    private boolean hasUserRole(String role) {
+        // Get the current authentication
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getAuthorities() != null) {
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                if (("ROLE_" + role).equals(authority.getAuthority())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -24,17 +24,18 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.2.16'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.1.4'
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.1.4'
+	implementation "org.mapstruct:mapstruct:1.5.5.Final"
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.1.4'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
-	implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.2.16'
-	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-
-	implementation "org.mapstruct:mapstruct:1.5.5.Final"
 	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {

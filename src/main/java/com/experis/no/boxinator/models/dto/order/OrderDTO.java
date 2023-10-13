@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class OrderDTO {
     private int id;
-    private int user;
+    private String user;
     private List<OrderProductDTO> ordersProducts;
 
 }

@@ -1,6 +1,6 @@
 package com.experis.no.boxinator.controllers;
 
-import com.experis.no.boxinator.exceptions.ProductNotFoundException;
+import com.experis.no.boxinator.exceptions.UserNotFoundException;
 import com.experis.no.boxinator.mappers.UserMapper;
 import com.experis.no.boxinator.models.User;
 import com.experis.no.boxinator.models.dto.user.UserDTO;
@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -41,6 +42,7 @@ public class UserController {
                     }
             )
     })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(
                 userMapper.userToUserDTO(
@@ -66,7 +68,8 @@ public class UserController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    public ResponseEntity<?> findById(@PathVariable int id) {
+    @PreAuthorize("hasAuthority('ID_' + #id) or hasRole('ADMIN')")
+    public ResponseEntity<?> findById(@PathVariable String id) {
         try {
             return ResponseEntity.ok(
                     userMapper.userToUserDTO(
@@ -74,7 +77,7 @@ public class UserController {
                     )
 
             );
-        } catch (ProductNotFoundException productNotFoundException) {
+        } catch (UserNotFoundException userNotFoundException) {
             return ResponseEntity.notFound().build();
         }
     }

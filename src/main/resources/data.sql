@@ -1,9 +1,9 @@
 -- Insert test data for the "user" table
-INSERT INTO "users" ("email", "username", "roles", "address")
+INSERT INTO "users" ("id","email", "username", "roles", "address")
 VALUES
-    ('user1@example.com', 'user1', 'User', '123 Main St'),
-    ('user2@example.com', 'user2', 'User', '456 Elm St'),
-    ('admin@example.com', 'admin', 'Admin', '789 Oak St');
+    ('97bf334f-6c68-44b8-8209-229774482905','user1@example.com', 'user1', 'User', '123 Main St'),
+    ('97bf334f-6c68-44b8-8209-229774482906','user2@example.com', 'user2', 'User', '456 Elm St'),
+    ('97bf334f-6c68-44b8-8209-229774482907','admin@example.com', 'admin', 'Admin', '789 Oak St');
 
 INSERT INTO countries (full_name, short_name, shipping_cost)
 VALUES
@@ -48,18 +48,16 @@ VALUES
 -- Insert test data for the "products" table
 INSERT INTO "orders" ("user_id")
 VALUES
-    (1),(1),(3),(NULL),(2);
+    ('97bf334f-6c68-44b8-8209-229774482905');
 
--- Insert test data for the "shipment" table
+-- Insert test data for the 'shipment" table
 INSERT INTO Shipment
 (order_id, countries_name, destination, billing_address, postal_code, city, phone_number, delivery_instruction, gift, email,status)
 VALUES
-    (1, 'US', '123 Main St', '456 Elm St', 12345, 'New York', 1234567890, 'Leave at front door', true,'john.doe@example.com',0),
-    (2, 'CA', '789 Maple St', '101 Pine St', 67890, 'Toronto', 2345678901, 'Ring doorbell twice', false,'jane.smith@example.ca',1),
-    (3, 'UK', '234 Oak St', '567 Birch St', 11223, 'London', 3456789012, NULL, false,'william.jones@example.co.uk',2),
-    (4, 'UK', '234 Oak St', '567 Birch St', 11223, 'London', 3456789012, NULL, false,'william.jones@example.co.uk',3);
+    (1, 'US', '123 Main St', '456 Elm St', 12345, 'New York', 1234567890, 'Leave at front door', true,'john.doe@example.com',0);
+
 
 
 insert into order_product ("orders_id", "product_id", "quantity")
 Values
-    (1, 1, 3),(1, 2, 3), (2, 1, 2), (3, 1, 1);
+    (1, 1, 3),(1, 2, 3);
