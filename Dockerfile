@@ -10,6 +10,7 @@ COPY --from=build ${JAR_FILE} /app/app.jar
 ENV HIBERNATE_DDL "none"
 ENV DB_SEED "never"
 ENV SPRING_PROFILE "prod"
+ENV LOGGING_LEVEL "INFO"
 
 EXPOSE 8080
 
