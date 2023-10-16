@@ -99,20 +99,19 @@ public class UserController {
             )
     })
     public ResponseEntity<?> add(@RequestBody UserPostDTO entity) throws URISyntaxException {
-        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        String userId = authentication.getToken().getSubject();
-        if (userId.equals(entity.getId())){
-            if (userService.findById(entity.getId()) != null){
+            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            String userId = authentication.getToken().getSubject();
+            if (userId.equals(entity.getId())){
+                if (userService.exists(entity.getId())){
+                    return ResponseEntity.badRequest().build();
+                }
+                User user = userService.add(userMapper.userPostDTOToUser(entity));
+                URI uri = new URI("api/v1/user/" + user.getId());
+                logger.log(Level.INFO,"User with this id was created: "+userId);
+                return ResponseEntity.created(uri).build();
+            }else {
                 return ResponseEntity.badRequest().build();
             }
-            User user = userService.add(userMapper.userPostDTOToUser(entity));
-            URI uri = new URI("api/v1/user/" + user.getId());
-            logger.log(Level.INFO,"User with this id was created: "+userId);
-            return ResponseEntity.created(uri).build();
-        }else {
-            return ResponseEntity.badRequest().build();
-        }
-
     }
 
 }
