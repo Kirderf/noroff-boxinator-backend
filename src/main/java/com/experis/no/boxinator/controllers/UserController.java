@@ -92,7 +92,10 @@ public class UserController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Created",
-                    content = @Content
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserDTO.class))
+                    }
             )
     })
     public ResponseEntity<?> add(@RequestBody UserPostDTO entity) throws URISyntaxException {
