@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/v1/resources/authenticated").authenticated()
                         .requestMatchers("/api/v1/resources/authorized").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .oauth2ResourceServer((oauth2) -> oauth2

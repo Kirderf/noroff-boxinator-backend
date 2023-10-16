@@ -57,23 +57,24 @@ public class ShipmentController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll(@RequestParam(required = false) String email) {
-        if (email != null) {
-            try {
+        try {
+            if (email != null) {
                 return ResponseEntity.ok(
                         shipmentMapper.shipmentToShipmentDTO(
                                 shipmentService.findByEmail(email)
                         )
                 );
-            } catch (ShipmentNotFoundException shipmentNotFoundException) {
-                return ResponseEntity.notFound().build();
+            } else {
+                return ResponseEntity.ok(
+                        shipmentMapper.shipmentToShipmentDTO(
+                                shipmentService.findAll()
+                        )
+                );
             }
-        } else {
-            return ResponseEntity.ok(
-                    shipmentMapper.shipmentToShipmentDTO(
-                            shipmentService.findAll()
-                    )
-            );
+        } catch (ShipmentNotFoundException shipmentNotFoundException) {
+            return ResponseEntity.notFound().build();
         }
+
     }
 
     @GetMapping("{id}")
