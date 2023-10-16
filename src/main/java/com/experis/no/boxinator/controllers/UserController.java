@@ -94,7 +94,7 @@ public class UserController {
                     description = "Created",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = UserDTO.class))
+                                    schema = @Schema(implementation = UserPostDTO.class))
                     }
             )
     })
@@ -102,6 +102,9 @@ public class UserController {
         JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getToken().getSubject();
         if (userId.equals(entity.getId())){
+            if (userService.findById(entity.getId()) != null){
+                return ResponseEntity.badRequest().build();
+            }
             User user = userService.add(userMapper.userPostDTOToUser(entity));
             URI uri = new URI("api/v1/user/" + user.getId());
             logger.log(Level.INFO,"User with this id was created: "+userId);
