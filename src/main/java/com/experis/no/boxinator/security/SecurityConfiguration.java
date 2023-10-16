@@ -10,8 +10,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,17 +32,18 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/resources/authorized").hasRole("USER")
                         .anyRequest().permitAll())
-                .oauth2ResourceServer((oauth2)-> oauth2
-                        .jwt((jwt)-> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+                .oauth2ResourceServer((oauth2) -> oauth2
+                        .jwt((jwt) -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         return http.build();
     }
+
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
             List<GrantedAuthority> authorities = new ArrayList<>();
 
-            //Get ID from jwtToken
+            // Get ID from jwtToken
             String userId = jwt.getClaim("sub");
             if (userId != null) {
                 authorities.add(new SimpleGrantedAuthority("ID_" + userId));
@@ -58,4 +64,25 @@ public class SecurityConfiguration {
         return jwtAuthenticationConverter;
     }
 
+    /**
+     * Configures the CORS (Cross-Origin Resource Sharing) configuration.
+     *
+     * @return the configured CorsConfigurationSource
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        List<String> allowedOriginsList = Arrays.asList("http://localhost:5173");
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(allowedOriginsList);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("authorization", "withCredentials", "content-type",
+                "x-auth-token", "Access-Control-Allow-Credentials", "access-control-allow-origin",
+                "Access-Control-Allow-headers"));
+        configuration.setExposedHeaders(List.of("x-auth-token"));
+        configuration.setMaxAge(Duration.ofSeconds(5000));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
