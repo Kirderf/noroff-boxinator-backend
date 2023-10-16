@@ -25,7 +25,7 @@ public class SecurityConfiguration {
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/resources/authorized").hasRole("USER")
+                        .requestMatchers("/api/v1/resources/authorized").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .oauth2ResourceServer((oauth2)-> oauth2
                         .jwt((jwt)-> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));

@@ -15,14 +15,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(path = "api/v1/user")
 public class UserController {
+    Logger logger = Logger.getLogger(this.getClass().getName());
     private final UserService userService;
     private final UserMapper userMapper;
 
@@ -91,9 +96,17 @@ public class UserController {
             )
     })
     public ResponseEntity<?> add(@RequestBody UserPostDTO entity) throws URISyntaxException {
-        User user = userService.add(userMapper.userPostDTOToUser(entity));
-        URI uri = new URI("api/v1/user/" + user.getId());
-        return ResponseEntity.created(uri).build();
+        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getToken().getSubject();
+        if (userId.equals(entity.getId())){
+            User user = userService.add(userMapper.userPostDTOToUser(entity));
+            URI uri = new URI("api/v1/user/" + user.getId());
+            logger.log(Level.INFO,"User with this id was created: "+userId);
+            return ResponseEntity.created(uri).build();
+        }else {
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 
 }
