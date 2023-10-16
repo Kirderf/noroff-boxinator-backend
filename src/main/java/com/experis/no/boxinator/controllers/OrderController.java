@@ -1,7 +1,6 @@
 package com.experis.no.boxinator.controllers;
 
 import com.experis.no.boxinator.exceptions.OrdersNotFoundException;
-import com.experis.no.boxinator.exceptions.ProductNotFoundException;
 import com.experis.no.boxinator.mappers.OrderMapper;
 import com.experis.no.boxinator.models.Orders;
 import com.experis.no.boxinator.models.dto.order.OrderDTO;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(path = "api/v1/order")
@@ -39,6 +37,7 @@ public class OrderController {
         this.ordersService = ordersService;
         this.orderMapper = orderMapper;
     }
+
     @GetMapping
     @Operation(summary = "Gets all Orders")
     @ApiResponses(value = {
@@ -53,8 +52,8 @@ public class OrderController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll(@RequestParam(required = false) Boolean fullProduct) {
-        if(fullProduct == null ) fullProduct = false;
-        if(!fullProduct)
+        if (fullProduct == null) fullProduct = false;
+        if (!fullProduct)
             return ResponseEntity.ok(
                     orderMapper.orderToOrderDTO(
                             ordersService.findAll()
@@ -62,11 +61,12 @@ public class OrderController {
             );
         else
             return ResponseEntity.ok(
-                orderMapper.orderWithProductsDTO(
-                        ordersService.findAll()
-                )
-        );
+                    orderMapper.orderWithProductsDTO(
+                            ordersService.findAll()
+                    )
+            );
     }
+
     @GetMapping(params = "userId")
     @Operation(summary = "Gets all order for a given user")
     @ApiResponses(value = {
@@ -81,14 +81,14 @@ public class OrderController {
     })
     @PreAuthorize("hasAuthority('ID_' + #userId) or hasRole('ADMIN')")
     public ResponseEntity<?> findAllFromUserId(@PathParam("userId") String userId, @RequestParam(required = false) Boolean fullProduct) {
-        if(fullProduct == null ) fullProduct = false;
-        if(!fullProduct)
+        if (fullProduct == null) fullProduct = false;
+        if (!fullProduct)
             return ResponseEntity.ok(
                     orderMapper.orderToOrderDTO(
                             ordersService.findAllByUserId(userId)
                     )
             );
-        else{
+        else {
             return ResponseEntity.ok(
                     orderMapper.orderWithProductsDTO(
                             ordersService.findAllByUserId(userId)
@@ -96,6 +96,7 @@ public class OrderController {
             );
         }
     }
+
     @GetMapping("{id}")
     @Operation(summary = "Gets a order by ID")
     @ApiResponses(value = {
@@ -119,25 +120,21 @@ public class OrderController {
         try {
             //check if user has the right access to this method
             boolean foundUserWithUid = false;
-            if (!hasUserRole("ADMIN")){
+            if (!hasUserRole("ADMIN")) {
                 Orders order = ordersService.findById(id);
                 if (order != null) {
-                    if (order.getUser() != null){
+                    if (order.getUser() != null) {
                         foundUserWithUid = (order.getUser().getId().equals(uid));
-                    }else {
-                        throw new OrdersNotFoundException(id);
                     }
-                }else{
-                    throw new OrdersNotFoundException(id);
                 }
-                if (!foundUserWithUid){
+                if (foundUserWithUid) {
                     throw new OrdersNotFoundException(id);
                 }
             }
 
 
-            if(fullProduct == null ) fullProduct = false;
-            if(!fullProduct)
+            if (fullProduct == null) fullProduct = false;
+            if (!fullProduct)
                 return ResponseEntity.ok(
                         orderMapper.orderToOrderDTO(
                                 ordersService.findById(id)
@@ -154,6 +151,7 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping
     @Operation(summary = "Adds a new order")
     @ApiResponses(value = {
