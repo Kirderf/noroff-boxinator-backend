@@ -1,9 +1,9 @@
 -- Insert test data for the "user" table
-INSERT INTO "users" ("id","email", "username", "roles", "address")
+INSERT INTO "users" ("id","email", "username", "address")
 VALUES
-    ('97bf334f-6c68-44b8-8209-229774482905','user1@example.com', 'user1', 'User', '123 Main St'),
-    ('97bf334f-6c68-44b8-8209-229774482906','user2@example.com', 'user2', 'User', '456 Elm St'),
-    ('97bf334f-6c68-44b8-8209-229774482907','admin@example.com', 'admin', 'Admin', '789 Oak St');
+    ('97bf334f-6c68-44b8-8209-229774482905','user1@example.com', 'user1',  '123 Main St'),
+    ('97bf334f-6c68-44b8-8209-229774482906','user2@example.com', 'user2',  '456 Elm St'),
+    ('97bf334f-6c68-44b8-8209-229774482907','admin@example.com', 'admin',  '789 Oak St');
 
 INSERT INTO countries (full_name, short_name, shipping_cost)
 VALUES
