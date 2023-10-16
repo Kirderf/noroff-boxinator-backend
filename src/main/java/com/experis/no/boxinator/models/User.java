@@ -12,13 +12,10 @@ public class User {
     @Id
     @Column(nullable = false, unique = true)
     private String id;
-
     @Column(length = 50, nullable = false, unique = true)
     private String  email;
     @Column(length = 50, nullable = false)
     private String  username;
-    @Column(length = 50, nullable = false)
-    private String  roles;
     @Column(length = 50, nullable = false)
     private String  address;
 }

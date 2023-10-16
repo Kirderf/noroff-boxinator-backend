@@ -44,6 +44,7 @@ public class ProductController {
                    }
            )
    })
+   @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(
                 productMapper.productToProductDTO(
