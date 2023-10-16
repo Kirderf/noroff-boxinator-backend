@@ -15,8 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -35,6 +33,7 @@ public class UserController {
         this.userService = userService;
         this.userMapper = userMapper;
     }
+
     @GetMapping
     @Operation(summary = "Gets all Users")
     @ApiResponses(value = {
@@ -55,6 +54,7 @@ public class UserController {
                 )
         );
     }
+
     @GetMapping("{id}")
     @Operation(summary = "Gets a user by ID")
     @ApiResponses(value = {
@@ -86,6 +86,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping
     @Operation(summary = "Adds a new user")
     @ApiResponses(value = {
@@ -98,20 +99,35 @@ public class UserController {
                     }
             )
     })
+    @PreAuthorize("hasAuthority('ID_' + #entity.id) or hasRole('ADMIN')")
     public ResponseEntity<?> add(@RequestBody UserPostDTO entity) throws URISyntaxException {
-            JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-            String userId = authentication.getToken().getSubject();
-            if (userId.equals(entity.getId())){
-                if (userService.exists(entity.getId())){
-                    return ResponseEntity.badRequest().build();
-                }
-                User user = userService.add(userMapper.userPostDTOToUser(entity));
-                URI uri = new URI("api/v1/user/" + user.getId());
-                logger.log(Level.INFO,"User with this id was created: "+userId);
-                return ResponseEntity.created(uri).build();
-            }else {
-                return ResponseEntity.badRequest().build();
-            }
+        if (userService.exists(entity.getId())) {
+            return ResponseEntity.badRequest().build();
+        }
+        User user = userService.add(userMapper.userPostDTOToUser(entity));
+        URI uri = new URI("api/v1/user/" + user.getId());
+        logger.log(Level.INFO, "User with this id was created: " + user.getId());
+        return ResponseEntity.created(uri).build();
     }
 
+    @PatchMapping
+    @Operation(summary = "Patches fields on a user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Created",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = UserPostDTO.class))
+                    }
+            )
+    })
+    @PreAuthorize("hasAuthority('ID_' + #entity.id) or hasRole('ADMIN')")
+    public ResponseEntity<?> patchFields(@RequestBody UserPostDTO entity) {
+        if (userService.exists(entity.getId())) {
+            User user = userService.update(userMapper.userPostDTOToUser(entity));
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }
