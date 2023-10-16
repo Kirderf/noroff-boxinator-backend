@@ -71,7 +71,8 @@ public class SecurityConfiguration {
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        List<String> allowedOriginsList = Arrays.asList("http://localhost:5173");
+        List<String> allowedOriginsList = Arrays.asList("http://localhost:5173",
+                "https://noroff-boxinator-frontend.vercel.app/");
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.setAllowedOrigins(allowedOriginsList);
