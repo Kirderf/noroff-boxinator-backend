@@ -58,7 +58,7 @@ VALUES ('Product A',
        ('Gadget', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBRBrH1hsEF4q9CDff2WLgf2DPJKXYO28dpQ&usqp=CAU',
         'A fancy gadget.', 50, 29.99, TRUE, 5, 5, 5, 300);
 
-INSERT INTO shipment (countries_name, email, destination, billing_address, status, postal_code, city,
+INSERT INTO shipment (countries_name, email, shipping_address, billing_address, status, postal_code, city,
                       phone_number, delivery_instruction, gift, user_id)
 VALUES ('US', 'john.doe@example.com', '789 Birch St, Springfield', '123 Elm St, Springfield', 0, 12345,
         'Springfield', '1234567890', 'Leave at door', FALSE, '97bf334f-6c68-44b8-8209-229774482903'),

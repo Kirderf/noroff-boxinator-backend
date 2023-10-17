@@ -41,7 +41,7 @@ public class Shipment {
     private Timestamp timestamp;
 
     @OneToMany(mappedBy = "shipment")
-    private Set<ShipmentProduct> ordersProducts = new HashSet<>();
+    private Set<ShipmentProduct> shipmentProducts = new HashSet<>();
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
