@@ -114,13 +114,20 @@ public class UserController {
     @Operation(summary = "Patches fields on a user")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "201",
-                    description = "Created",
+                    responseCode = "200",
+                    description = "OK",
                     content = {
                             @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = UserPostDTO.class))
                     }
-            )
+            ), @ApiResponse(
+            responseCode = "400",
+            description = "Bad request",
+            content = {
+                    @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProblemDetail.class))
+            }
+    )
     })
     @PreAuthorize("hasAuthority('ID_' + #entity.id) or hasRole('ADMIN')")
     public ResponseEntity<?> patchFields(@RequestBody UserPostDTO entity) {
