@@ -115,7 +115,8 @@ public class ShipmentController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Created",
-                    content = @Content
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ShipmentPostDTO.class))
             )
     })
     public ResponseEntity<?> add(@RequestBody ShipmentPostDTO entity) {

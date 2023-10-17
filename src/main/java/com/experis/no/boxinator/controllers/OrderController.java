@@ -158,7 +158,8 @@ public class OrderController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Created",
-                    content = @Content
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = OrderPostDTO.class))
             )
     })
     public ResponseEntity<?> add(@RequestBody OrderPostDTO entity) throws URISyntaxException {
