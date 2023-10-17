@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class OrdersServiceImpl implements OrdersService{
+public class OrdersServiceImpl implements OrdersService {
     private final OrdersRepository ordersRepository;
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
@@ -24,6 +24,7 @@ public class OrdersServiceImpl implements OrdersService{
     public Collection<Orders> findAll() {
         return ordersRepository.findAll();
     }
+
     @Override
     public Collection<Orders> findAllByUserId(String userId) {
         return ordersRepository.getOrderByUserId(userId);

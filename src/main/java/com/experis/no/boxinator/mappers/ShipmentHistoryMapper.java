@@ -20,15 +20,17 @@ public abstract class ShipmentHistoryMapper {
 
 
     public abstract Collection<ShipmentHistoryDTO> shipmentHistoryToShipmentHistoryDTO(Collection<ShipmentHistory> shipmentHistoriesCollection);
+
     @Named(value = "mapStatus")
-    Status mapStatus(Integer id){
+    Status mapStatus(Integer id) {
         if (id == null) {
             return null;
         }
         return Status.values()[id];
     }
+
     @Named(value = "unmapStatus")
-    Integer unmapStatus(String id){
+    Integer unmapStatus(String id) {
         if (id == null) {
             return null;
         }

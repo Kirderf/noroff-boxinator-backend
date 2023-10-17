@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface OrdersRepository extends JpaRepository<Orders,Integer> {
+public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     Collection<Orders> getOrderByUserId(String userId);
 }

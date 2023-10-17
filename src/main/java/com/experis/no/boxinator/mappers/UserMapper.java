@@ -13,6 +13,7 @@ public abstract class UserMapper {
     public abstract UserDTO userToUserDTO(User user);
 
     public abstract User userPostDTOToUser(UserPostDTO userPostDTO);
+
     public abstract User userDTOToUser(UserDTO userDTO);
 
 

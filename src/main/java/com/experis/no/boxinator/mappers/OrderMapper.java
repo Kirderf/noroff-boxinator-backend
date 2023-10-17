@@ -34,42 +34,46 @@ public abstract class OrderMapper {
 
 
     @Mapping(target = "ordersProducts", qualifiedByName = "orderToOrderProductId")
-    @Mapping(target= "user", source = "user.id")
+    @Mapping(target = "user", source = "user.id")
     public abstract OrderDTO orderToOrderDTO(Orders order);
+
     @Mapping(target = "ordersProducts", qualifiedByName = "orderToOrderProductFull")
     @Mapping(target = "user", source = "user.id")
     public abstract OrderWithProductsDTO orderWithProductsDTO(Orders orders);
 
 
     public abstract Collection<OrderWithProductsDTO> orderWithProductsDTO(Collection<Orders> ordersCollection);
+
     public abstract Collection<OrderDTO> orderToOrderDTO(Collection<Orders> ordersCollection);
 
     @Mapping(target = "user", qualifiedByName = "userIdToUser")
     public abstract Orders ordersPostDTOToOrders(OrderPostDTO orderPostDTO);
 
     @Named(value = "userIdToUser")
-    public User mapIdsToUser(String id){
-        if(id==null){
+    public User mapIdsToUser(String id) {
+        if (id == null) {
             return null;
         }
         return userService.findById(id);
     }
+
     @Named(value = "orderToOrderProductFull")
     public List<OrderProductWithFullProductDTO> orderToOrderProductFull(Set<OrderProduct> value) {
-        if(value == null)
+        if (value == null)
             return null;
-        List<OrderProduct> orderProductList =  value.stream().map(o -> ordersProductsServiceImpl.findById(o.getId())).toList();
+        List<OrderProduct> orderProductList = value.stream().map(o -> ordersProductsServiceImpl.findById(o.getId())).toList();
         List<OrderProductWithFullProductDTO> orderProductDTOList = new ArrayList<>();
         for (OrderProduct orderProduct : orderProductList) {
             orderProductDTOList.add(new OrderProductWithFullProductDTO(productMapper.productToProductDTO(productService.findById(orderProduct.getProductId())), orderProduct.getQuantity()));
         }
         return orderProductDTOList;
     }
+
     @Named(value = "orderToOrderProductId")
     public List<OrderProductDTO> mapProductToId(Set<OrderProduct> value) {
-        if(value == null)
+        if (value == null)
             return null;
-        List<OrderProduct> orderProductList =  value.stream().map(o -> ordersProductsServiceImpl.findById(o.getId())).toList();
+        List<OrderProduct> orderProductList = value.stream().map(o -> ordersProductsServiceImpl.findById(o.getId())).toList();
         List<OrderProductDTO> orderProductDTOList = new ArrayList<>();
         for (OrderProduct orderProduct : orderProductList) {
             orderProductDTOList.add(new OrderProductDTO(orderProduct.getProductId(), orderProduct.getQuantity()));

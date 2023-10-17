@@ -4,6 +4,7 @@ import com.experis.no.boxinator.exceptions.UserNotFoundException;
 import com.experis.no.boxinator.models.User;
 import com.experis.no.boxinator.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.Collection;
 
 @Service

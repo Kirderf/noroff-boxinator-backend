@@ -22,46 +22,49 @@ public abstract class ShipmentMapper {
     @Autowired
     private CountriesService countriesService;
 
-    @Mapping(target = "order",qualifiedByName = "mapOrderID")
+    @Mapping(target = "order", qualifiedByName = "mapOrderID")
     @Mapping(target = "countries", qualifiedByName = "mapCountriesID")
     @Mapping(target = "status", qualifiedByName = "mapStatus")
     public abstract ShipmentDTO shipmentToShipmentDTO(Shipment shipment);
-    @Mapping(target = "order",qualifiedByName = "unmapOrderID")
-    @Mapping(target = "countries",qualifiedByName = "unmapCountriesID")
-    @Mapping(target = "status",qualifiedByName = "unmapStatus")
+
+    @Mapping(target = "order", qualifiedByName = "unmapOrderID")
+    @Mapping(target = "countries", qualifiedByName = "unmapCountriesID")
+    @Mapping(target = "status", qualifiedByName = "unmapStatus")
     public abstract Shipment shipmentDTOToShipment(ShipmentDTO shipmentDTO);
 
-    @Mapping(target = "order",qualifiedByName = "unmapOrderID")
-    @Mapping(target = "countries",qualifiedByName = "unmapCountriesID")
+    @Mapping(target = "order", qualifiedByName = "unmapOrderID")
+    @Mapping(target = "countries", qualifiedByName = "unmapCountriesID")
     public abstract Shipment shipmentPostDTOToShipment(ShipmentPostDTO shipmentPostDTO);
+
     public abstract Collection<ShipmentDTO> shipmentToShipmentDTO(Collection<Shipment> shipmentCollection);
 
 
     @Named(value = "mapOrderID")
-    Integer mapOrderID(Orders orders){
-        if (orders == null){
+    Integer mapOrderID(Orders orders) {
+        if (orders == null) {
             return null;
         }
         return orders.getId();
     }
 
     @Named(value = "unmapOrderID")
-    Orders unmapOrderID(Integer orders){
-        if (orders == null || orders == 0){
+    Orders unmapOrderID(Integer orders) {
+        if (orders == null || orders == 0) {
             return null;
         }
         return ordersService.findById(orders);
     }
 
     @Named(value = "mapCountriesID")
-    String mapCountriesID(Countries countries){
+    String mapCountriesID(Countries countries) {
         if (countries == null) {
             return null;
         }
         return countries.getShortName();
     }
+
     @Named(value = "unmapCountriesID")
-    Countries unmapCountriesID(String countries){
+    Countries unmapCountriesID(String countries) {
         if (countries == null) {
             return null;
         }
@@ -69,14 +72,15 @@ public abstract class ShipmentMapper {
     }
 
     @Named(value = "mapStatus")
-    Status mapStatus(Integer id){
+    Status mapStatus(Integer id) {
         if (id == null) {
             return null;
         }
         return Status.values()[id];
     }
+
     @Named(value = "unmapStatus")
-    Integer unmapStatus(String id){
+    Integer unmapStatus(String id) {
         if (id == null) {
             return null;
         }

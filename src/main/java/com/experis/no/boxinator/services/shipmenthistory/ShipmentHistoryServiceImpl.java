@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
-public class ShipmentHistoryServiceImpl implements ShipmentHistoryService{
+public class ShipmentHistoryServiceImpl implements ShipmentHistoryService {
     private final ShipmentHistoryRepository shipmentHistoryRepository;
 
     public ShipmentHistoryServiceImpl(ShipmentHistoryRepository shipmentHistoryRepository) {

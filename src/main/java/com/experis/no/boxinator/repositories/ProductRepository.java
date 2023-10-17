@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product,Integer> {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
     Collection<Product> getProductsByisActiveIs(boolean isActive);
 }

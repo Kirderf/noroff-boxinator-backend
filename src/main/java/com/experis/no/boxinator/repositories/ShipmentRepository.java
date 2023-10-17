@@ -9,9 +9,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface ShipmentRepository extends JpaRepository<Shipment,Integer> {
+public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
 
     Collection<Shipment> findShipmentsByEmailIgnoreCase(String email);
+
     @Query("SELECT s FROM Shipment s WHERE s.order.user.id = :userId")
     Collection<Shipment> findShipmentsByUserId(@Param("userId") String userId);
 }

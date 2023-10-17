@@ -22,6 +22,7 @@ public class OrderProduct {
     private Product product;
 
     private int quantity;
+
     public int getProductId() {
         return this.id.productsId;
     }
