@@ -1,8 +1,24 @@
 -- Insert test data for the "user" table
 INSERT INTO "users" ("id", "email", "username", "address")
-VALUES ('97bf334f-6c68-44b8-8209-229774482905', 'user1@example.com', 'user1', '123 Main St'),
-       ('97bf334f-6c68-44b8-8209-229774482906', 'user2@example.com', 'user2', '456 Elm St'),
-       ('97bf334f-6c68-44b8-8209-229774482907', 'admin@example.com', 'admin', '789 Oak St');
+VALUES ('97bf334f-6c68-44b8-8209-229774482903', 'user1@example.com', 'user1', '123 Main St'),
+       ('97bf334f-6c68-44b8-8209-229774482902', 'user2@example.com', 'user2', '456 Elm St'),
+       ('97bf334f-6c68-44b8-8209-229774482901', 'admin@example.com', 'admin', '789 Oak St'),
+       ('97bf334f-6c68-44b8-8209-229774482906', 'john.doe@example.com', 'JohnDoe', '123 Elm St, Springfield'),
+       ('97bf334f-6c68-44b8-8209-229774482905', 'jane.doe@example.com', 'JaneDoe', '456 Maple St, Springfield'),
+       ('97bf334f-6c68-44b8-8209-229774482907', 'alice.smith@example.com', 'AliceSmith', '789 Birch St, Springfield'),
+       ('97bf334f-6c68-44b8-8209-229774482908', 'bob.jones@example.com', 'BobJones', '101 Pine St, Springfield'),
+       ('97bf334f-6c68-44b8-8209-229774482909', 'charlie.brown@example.com', 'CharlieBrown', '202 Oak St, Springfield');
+
+
+-- Assuming 5 different users have placed orders
+INSERT INTO orders (user_id)
+VALUES ('97bf334f-6c68-44b8-8209-229774482906'),
+       ('97bf334f-6c68-44b8-8209-229774482905'),
+       ('97bf334f-6c68-44b8-8209-229774482907'),
+       ('97bf334f-6c68-44b8-8209-229774482908'),
+       ('97bf334f-6c68-44b8-8209-229774482909');
+-- Remember the order IDs generated for the next insertion
+
 
 INSERT INTO countries (full_name, short_name, shipping_cost)
 VALUES ('Australia', 'AU', 50),
@@ -46,22 +62,36 @@ VALUES ('Product A',
         'Description for Product B', 50, 29.99, false, 0, 2, 0, 0),
        ('Product C',
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBRBrH1hsEF4q9CDff2WLgf2DPJKXYO28dpQ&usqp=CAU',
-        'Description for Product C', 75, 9.99, true, 0, 0, 3, 0);
+        'Description for Product C', 75, 9.99, true, 0, 0, 3, 0),
+       ('Widget', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBRBrH1hsEF4q9CDff2WLgf2DPJKXYO28dpQ&usqp=CAU', 'A standard widget.', 100, 19.99, TRUE, 10, 10, 10, 500),
+       ('Gadget', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBRBrH1hsEF4q9CDff2WLgf2DPJKXYO28dpQ&usqp=CAU', 'A fancy gadget.', 50, 29.99, TRUE, 5, 5, 5, 300);
+
+INSERT INTO shipment (order_id, countries_name, email, destination, billing_address, status, postal_code, city,
+                      phone_number, delivery_instruction, gift)
+VALUES (1, 'US', 'john.doe@example.com', '789 Birch St, Springfield', '123 Elm St, Springfield', 0, 12345,
+        'Springfield', 1234567890, 'Leave at door', FALSE),
+       (2, 'CA', 'jane.doe@example.com', '333 Cedar St, Vancouver', '456 Maple St, Springfield', 1, 54321, 'Vancouver',
+        2345678901, 'Knock twice', TRUE),
+       (3, 'UK', 'alice.smith@example.com', '444 Willow St, London', '789 Birch St, Springfield', 2, 67890, 'London',
+        3456789012, 'Call before delivery', FALSE),
+       (4, 'FR', 'bob.jones@example.com', '555 Poplar St, Paris', '101 Pine St, Springfield', 3, 78901, 'Paris',
+        4567890123, 'Leave with neighbor', TRUE),
+       (5, 'DE', 'charlie.brown@example.com', '666 Spruce St, Berlin', '202 Oak St, Springfield', 1, 89012, 'Berlin',
+        5678901234, 'Ring bell', FALSE);
+
+-- Assuming the shipments generated IDs from '1' to '5' and have different statuses
+INSERT INTO shipment_history (shipment_id, status, timestamp)
+VALUES (1, 0, current_timestamp),
+       (2, 1, current_timestamp),
+       (3, 2, current_timestamp),
+       (4, 3, current_timestamp),
+       (5, 1, current_timestamp);
 
 
--- Insert test data for the "products" table
-INSERT INTO "orders" ("user_id")
-VALUES ('97bf334f-6c68-44b8-8209-229774482905');
-
--- Insert test data for the 'shipment" table
-INSERT INTO Shipment
-(order_id, countries_name, destination, billing_address, postal_code, city, phone_number, delivery_instruction, gift,
- email, status)
-VALUES (1, 'US', '123 Main St', '456 Elm St', 12345, 'New York', 1234567890, 'Leave at front door', true,
-        'john.doe@example.com', 0);
-
-
-
-insert into order_product ("orders_id", "product_id", "quantity")
-Values (1, 1, 3),
-       (1, 2, 3);
+-- Assuming the Orders generated IDs from '1' to '5' and products have IDs from '1' to '5'
+INSERT INTO order_product (orders_id, product_id, quantity)
+VALUES (1, 1, 5),
+       (2, 2, 3),
+       (3, 3, 4),
+       (4, 4, 2),
+       (5, 5, 6);
