@@ -20,9 +20,9 @@ public class Shipment {
     private Countries countries;
     @Column(nullable = false)
     private String email;
-    @Column(length = 50, nullable = false)
-    private String destination;
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false)
+    private String shippingAddress;
+    @Column(nullable = false)
     private String billingAddress;
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
