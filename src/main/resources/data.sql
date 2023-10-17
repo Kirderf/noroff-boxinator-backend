@@ -61,15 +61,15 @@ VALUES ('Product A',
 INSERT INTO shipment (countries_name, email, destination, billing_address, status, postal_code, city,
                       phone_number, delivery_instruction, gift, user_id)
 VALUES ('US', 'john.doe@example.com', '789 Birch St, Springfield', '123 Elm St, Springfield', 0, 12345,
-        'Springfield', 1234567890, 'Leave at door', FALSE, '97bf334f-6c68-44b8-8209-229774482903'),
+        'Springfield', '1234567890', 'Leave at door', FALSE, '97bf334f-6c68-44b8-8209-229774482903'),
        ('CA', 'jane.doe@example.com', '333 Cedar St, Vancouver', '456 Maple St, Springfield', 1, 54321, 'Vancouver',
-        2345678901, 'Knock twice', TRUE, '97bf334f-6c68-44b8-8209-229774482902'),
+        '2345678901', 'Knock twice', TRUE, '97bf334f-6c68-44b8-8209-229774482902'),
        ('UK', 'alice.smith@example.com', '444 Willow St, London', '789 Birch St, Springfield', 2, 67890, 'London',
-        3456789012, 'Call before delivery', FALSE, '97bf334f-6c68-44b8-8209-229774482905'),
+        '3456789012', 'Call before delivery', FALSE, '97bf334f-6c68-44b8-8209-229774482905'),
        ('FR', 'bob.jones@example.com', '555 Poplar St, Paris', '101 Pine St, Springfield', 3, 78901, 'Paris',
-        4567890123, 'Leave with neighbor', TRUE, '97bf334f-6c68-44b8-8209-229774482906'),
+        '4567890123', 'Leave with neighbor', TRUE, '97bf334f-6c68-44b8-8209-229774482906'),
        ('DE', 'charlie.brown@example.com', '666 Spruce St, Berlin', '202 Oak St, Springfield', 1, 89012, 'Berlin',
-        5678901234, 'Ring bell', FALSE, '97bf334f-6c68-44b8-8209-229774482908');
+        '5678901234', 'Ring bell', FALSE, '97bf334f-6c68-44b8-8209-229774482908');
 
 -- Assuming the shipments generated IDs from '1' to '5' and have different statuses
 INSERT INTO shipment_history (shipment_id, status, timestamp)
