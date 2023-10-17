@@ -1,16 +1,14 @@
 package com.experis.no.boxinator.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
-@Getter
-@Setter
 public class Shipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package com.experis.no.boxinator.controllers;
 
 import com.experis.no.boxinator.exceptions.ShipmentNotFoundException;
+import com.experis.no.boxinator.exceptions.UserNotFoundException;
 import com.experis.no.boxinator.mappers.ShipmentHistoryMapper;
 import com.experis.no.boxinator.mappers.ShipmentMapper;
 import com.experis.no.boxinator.models.Shipment;
@@ -102,28 +103,23 @@ public class ShipmentController {
     @PreAuthorize("hasAuthority('ID_' + #id) or hasRole('ADMIN')")
     public ResponseEntity<?> findByUserId(@PathVariable String id, @RequestParam(required = false) Boolean fullProduct) {
         if (fullProduct == null) fullProduct = false;
-        if (!fullProduct) {
-            try {
+        try {
+            if (!fullProduct) {
                 return ResponseEntity.ok(
                         shipmentMapper.shipmentToShipmentDTO(
                                 shipmentService.findByUserID(id)
                         )
-
                 );
-            } catch (ShipmentNotFoundException shipmentNotFoundException) {
-                return ResponseEntity.notFound().build();
-            }
-        } else {
-            try {
+            } else {
                 return ResponseEntity.ok(
                         shipmentMapper.shipmentToShipmentWithFullProductDTO(
                                 shipmentService.findByUserID(id)
                         )
 
                 );
-            } catch (ShipmentNotFoundException shipmentNotFoundException) {
-                return ResponseEntity.notFound().build();
             }
+        } catch (ShipmentNotFoundException shipmentNotFoundException) {
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -184,12 +180,14 @@ public class ShipmentController {
             )
     })
     public ResponseEntity<?> add(@RequestBody ShipmentPostDTO entity) {
-        Shipment shipment = shipmentService.add(shipmentMapper.shipmentPostDTOToShipment(entity));
         URI uri;
         try {
+            Shipment shipment = shipmentService.add(shipmentMapper.shipmentPostDTOToShipment(entity));
             uri = new URI("api/v1/shipment/" + shipment.getId());
         } catch (URISyntaxException e) {
             return ResponseEntity.internalServerError().build();
+        } catch (UserNotFoundException userNotFoundException) {
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.created(uri).build();
     }

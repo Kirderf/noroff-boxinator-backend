@@ -14,7 +14,7 @@ public class ShipmentPostDTO {
     private String email;
     private String billingAddress;
     private String deliveryInstruction;
-    private String destination;
+    private String shippingAddress;
     private String countries;
     private String city;
     private String phoneNumber;
