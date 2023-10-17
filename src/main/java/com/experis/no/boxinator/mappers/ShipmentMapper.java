@@ -36,6 +36,7 @@ public abstract class ShipmentMapper {
 
     @Mapping(target = "countries", qualifiedByName = "mapCountriesID")
     @Mapping(target = "user", source = "user.id")
+    @Named("shipmentToShipmentWithFullProductDTO")
     public abstract ShipmentDTO shipmentToShipmentWithFullProductDTO(Shipment shipment);
 
 
@@ -51,6 +52,8 @@ public abstract class ShipmentMapper {
     @IterableMapping(qualifiedByName = {"shipmentToShipmentDTO"})
     public abstract Collection<ShipmentDTO> shipmentToShipmentDTO(Collection<Shipment> shipmentCollection);
 
+    @IterableMapping(qualifiedByName = {"shipmentToShipmentWithFullProductDTO"})
+    public abstract Collection<ShipmentDTO> shipmentToShipmentWithFullProductDTO(Collection<Shipment> shipmentCollection);
 
     @Named(value = "mapCountriesID")
     String mapCountriesID(Countries countries) {
