@@ -15,6 +15,7 @@ public abstract class ProductMapper {
     public abstract ProductDTO productToProductDTO(Product product);
 
     public abstract Product productPostDTOToProduct(ProductPostDTO productPostDTO);
+
     public abstract Product productDTOToProduct(ProductDTO productDTO);
 
 

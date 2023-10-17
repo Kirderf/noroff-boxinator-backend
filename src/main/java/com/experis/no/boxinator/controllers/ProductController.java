@@ -32,19 +32,19 @@ public class ProductController {
         this.productMapper = productMapper;
     }
 
-   @GetMapping
-   @Operation(summary = "Gets all Products")
-   @ApiResponses(value = {
-           @ApiResponse(
-                   responseCode = "200",
-                   description = "Success",
-                   content = {
-                           @Content(mediaType = "application/json",
-                                   array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))
-                   }
-           )
-   })
-   @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    @Operation(summary = "Gets all Products")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))
+                    }
+            )
+    })
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(
                 productMapper.productToProductDTO(
@@ -52,6 +52,7 @@ public class ProductController {
                 )
         );
     }
+
     @GetMapping(params = "active")
     @Operation(summary = "Gets all active Products")
     @ApiResponses(value = {
@@ -65,12 +66,13 @@ public class ProductController {
             )
     })
     public ResponseEntity<?> findAll(@PathParam("active") boolean active) {
-            return ResponseEntity.ok(
-                    productMapper.productToProductDTO(
-                            productService.getAllActive(active)
-                    )
-            );
+        return ResponseEntity.ok(
+                productMapper.productToProductDTO(
+                        productService.getAllActive(active)
+                )
+        );
     }
+
     @GetMapping("{id}")
     @Operation(summary = "Gets a product by ID")
     @ApiResponses(value = {
@@ -101,6 +103,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @PostMapping
     @Operation(summary = "Adds a new product")
     @ApiResponses(value = {

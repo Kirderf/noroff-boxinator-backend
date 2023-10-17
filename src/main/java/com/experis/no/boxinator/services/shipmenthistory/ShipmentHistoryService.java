@@ -5,6 +5,6 @@ import com.experis.no.boxinator.services.CrudService;
 
 import java.util.Collection;
 
-public interface ShipmentHistoryService extends CrudService<ShipmentHistory,Integer> {
+public interface ShipmentHistoryService extends CrudService<ShipmentHistory, Integer> {
     Collection<ShipmentHistory> findAllByShipmentID(Integer id);
 }

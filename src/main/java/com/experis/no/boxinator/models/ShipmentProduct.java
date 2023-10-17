@@ -9,33 +9,30 @@ import java.io.Serializable;
 @Entity
 @Getter
 @Setter
-public class OrderProduct {
+public class ShipmentProduct {
     @EmbeddedId
-    private OrdersProductsId id = new OrdersProductsId();
+    private ShipmentProductsId id = new ShipmentProductsId();
 
     @ManyToOne
-    @MapsId("ordersId")
-    private Orders orders;
+    @MapsId("shipmentId")
+    private Shipment shipment;
 
     @ManyToOne
     @MapsId("productsId")
     private Product product;
 
     private int quantity;
-    public int getProductId() {
-        return this.id.productsId;
-    }
 
     @Embeddable
     @Getter
     @Setter
-    public static class OrdersProductsId implements Serializable {
+    public static class ShipmentProductsId implements Serializable {
 
-        private int ordersId;
+        private int shipmentId;
         private int productsId;
 
 
-        public OrdersProductsId() {
+        public ShipmentProductsId() {
 
         }
     }

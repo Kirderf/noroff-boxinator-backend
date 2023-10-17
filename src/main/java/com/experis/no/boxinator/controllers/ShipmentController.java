@@ -7,9 +7,9 @@ import com.experis.no.boxinator.models.Shipment;
 import com.experis.no.boxinator.models.ShipmentHistory;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentDTO;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentPostDTO;
-import com.experis.no.boxinator.models.dto.shipmentHistory.ShipmentHistoryDTO;
 import com.experis.no.boxinator.services.shipment.ShipmentService;
 import com.experis.no.boxinator.services.shipmenthistory.ShipmentHistoryService;
+import com.experis.no.boxinator.services.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,12 +32,14 @@ import java.util.Collection;
 @RequestMapping(path = "api/v1/shipment")
 public class ShipmentController {
     private final ShipmentService shipmentService;
+    private final UserService userService;
     private final ShipmentHistoryService historyService;
     private final ShipmentMapper shipmentMapper;
     private final ShipmentHistoryMapper historyMapper;
 
-    public ShipmentController(ShipmentService shipmentService, ShipmentHistoryService historyService, ShipmentMapper shipmentMapper, ShipmentHistoryMapper historyMapper) {
+    public ShipmentController(ShipmentService shipmentService, UserService userService, ShipmentHistoryService historyService, ShipmentMapper shipmentMapper, ShipmentHistoryMapper historyMapper) {
         this.shipmentService = shipmentService;
+        this.userService = userService;
         this.historyService = historyService;
         this.shipmentMapper = shipmentMapper;
         this.historyMapper = historyMapper;
@@ -85,7 +87,9 @@ public class ShipmentController {
                     description = "Success",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ShipmentHistoryDTO.class))
+                                    schema =
+                                    @Schema(implementation = ShipmentDTO.class)
+                            )
                     }
             ),
             @ApiResponse(
@@ -96,14 +100,74 @@ public class ShipmentController {
             )
     })
     @PreAuthorize("hasAuthority('ID_' + #id) or hasRole('ADMIN')")
-    public ResponseEntity<?> findByUserId(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(
-                    shipmentMapper.shipmentToShipmentDTO(
-                            shipmentService.findByUserID(id)
-                    )
+    public ResponseEntity<?> findByUserId(@PathVariable String id, @RequestParam(required = false) Boolean fullProduct) {
+        if (fullProduct == null) fullProduct = false;
+        if (!fullProduct) {
+            try {
+                return ResponseEntity.ok(
+                        shipmentMapper.shipmentToShipmentDTO(
+                                shipmentService.findByUserID(id)
+                        )
 
-            );
+                );
+            } catch (ShipmentNotFoundException shipmentNotFoundException) {
+                return ResponseEntity.notFound().build();
+            }
+        } else {
+            try {
+                return ResponseEntity.ok(
+                        shipmentMapper.shipmentToShipmentWithFullProductDTO(
+                                shipmentService.findByUserID(id)
+                        )
+
+                );
+            } catch (ShipmentNotFoundException shipmentNotFoundException) {
+                return ResponseEntity.notFound().build();
+            }
+        }
+    }
+
+    @PatchMapping("{shipmentId}")
+    @Operation(summary = "Updates a Shipment by Email")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema =
+                                    @Schema(implementation = ShipmentDTO.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasAuthority('ID_' + #id) or hasRole('ADMIN')")
+    public ResponseEntity<?> updateByEmail(@PathVariable Integer shipmentId, String id, @RequestParam(required = false) Boolean fullProduct) {
+        if (fullProduct == null) fullProduct = false;
+        try {
+            Shipment shipment = shipmentService.findById(shipmentId);
+            shipment.setUser(userService.findById(id));
+            shipmentService.update(shipment);
+            if (!fullProduct) {
+                return ResponseEntity.ok(
+                        shipmentMapper.shipmentToShipmentDTO(
+                                shipment
+                        )
+                );
+            } else {
+                return ResponseEntity.ok(
+                        shipmentMapper.shipmentToShipmentWithFullProductDTO(
+                                shipment
+                        )
+
+                );
+            }
         } catch (ShipmentNotFoundException shipmentNotFoundException) {
             return ResponseEntity.notFound().build();
         }
@@ -115,7 +179,8 @@ public class ShipmentController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Created",
-                    content = @Content
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ShipmentPostDTO.class))
             )
     })
     public ResponseEntity<?> add(@RequestBody ShipmentPostDTO entity) {

@@ -8,5 +8,5 @@ import lombok.Setter;
 public class CountriesDTO {
     private String shortName;
     private String fullName;
-    private int shippingCost; //TODO fix
+    private int shippingCost;
 }

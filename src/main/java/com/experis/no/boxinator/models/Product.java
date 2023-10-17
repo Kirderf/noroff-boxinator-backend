@@ -13,10 +13,10 @@ public class Product {
     private int id;
 
     @Column(length = 50, nullable = false)
-    private String  name;
+    private String name;
 
     @Column(nullable = false)
-    private String  image;
+    private String image;
 
     @Column(length = 50, nullable = false)
     private String description;

@@ -10,17 +10,18 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class ShipmentHistory {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-        @Column(nullable = false)
-        private int status;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private Status status;
 
-        @Column(nullable = false)
-        private Timestamp timestamp;
+    @Column(nullable = false)
+    private Timestamp timestamp;
 
-        @ManyToOne
-        @JoinColumn(name = "shipment_id")
-        private Shipment shipment;
+    @ManyToOne
+    @JoinColumn(name = "shipment_id")
+    private Shipment shipment;
 }

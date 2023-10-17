@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface ShipmentHistoryRepository extends JpaRepository<ShipmentHistory,Integer> {
+public interface ShipmentHistoryRepository extends JpaRepository<ShipmentHistory, Integer> {
     Collection<ShipmentHistory> getAllByShipment_Id(int shipment_id);
 }

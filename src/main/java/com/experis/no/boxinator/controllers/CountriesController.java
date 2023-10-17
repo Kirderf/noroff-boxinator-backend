@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CountriesController {
     private final CountriesService countriesService;
     private final CountriesMapper countriesMapper;
+
     public CountriesController(CountriesService countriesService, CountriesMapper countriesMapper) {
         this.countriesService = countriesService;
         this.countriesMapper = countriesMapper;
@@ -46,6 +47,7 @@ public class CountriesController {
                 )
         );
     }
+
     @GetMapping("{id}")
     @Operation(summary = "Gets a country by countryCode (Example us for United states)")
     @ApiResponses(value = {
