@@ -1,14 +1,14 @@
 package com.experis.no.boxinator.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 
+@Data
 @Entity
-@Getter
-@Setter
 public class ShipmentProduct {
     @EmbeddedId
     private ShipmentProductsId id = new ShipmentProductsId();
