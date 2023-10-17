@@ -16,7 +16,7 @@ public class Product {
     @Column(nullable = false)
     private String image;
 
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false)
     private String description;
 
     @Column(length = 50, nullable = false)
@@ -24,8 +24,7 @@ public class Product {
 
     @Column(length = 10, nullable = false)
     private float price;
-
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean isActive;
 
     @Column(nullable = false)
