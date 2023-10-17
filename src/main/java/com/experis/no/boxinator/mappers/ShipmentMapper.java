@@ -2,7 +2,6 @@ package com.experis.no.boxinator.mappers;
 
 import com.experis.no.boxinator.models.Countries;
 import com.experis.no.boxinator.models.Shipment;
-import com.experis.no.boxinator.models.Status;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentDTO;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentPostDTO;
 import com.experis.no.boxinator.services.countries.CountriesService;
@@ -20,12 +19,10 @@ public abstract class ShipmentMapper {
 
 
     @Mapping(target = "countries", qualifiedByName = "mapCountriesID")
-    @Mapping(target = "status", qualifiedByName = "mapStatus")
     public abstract ShipmentDTO shipmentToShipmentDTO(Shipment shipment);
 
 
     @Mapping(target = "countries", qualifiedByName = "unmapCountriesID")
-    @Mapping(target = "status", qualifiedByName = "unmapStatus")
     public abstract Shipment shipmentDTOToShipment(ShipmentDTO shipmentDTO);
 
 
@@ -51,19 +48,4 @@ public abstract class ShipmentMapper {
         return countriesService.findById(countries);
     }
 
-    @Named(value = "mapStatus")
-    Status mapStatus(Integer id) {
-        if (id == null) {
-            return null;
-        }
-        return Status.values()[id];
-    }
-
-    @Named(value = "unmapStatus")
-    Integer unmapStatus(String id) {
-        if (id == null) {
-            return null;
-        }
-        return Status.valueOf(id).ordinal();
-    }
 }

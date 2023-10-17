@@ -24,14 +24,15 @@ public class Shipment {
     private String destination;
     @Column(length = 50, nullable = false)
     private String billingAddress;
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private int status;
+    private Status status;
     @Column(nullable = false)
     private int postalCode;
     @Column(nullable = false)
     private String city;
     @Column(nullable = false)
-    private long phoneNumber;
+    private String phoneNumber;
     @Column()
     private String deliveryInstruction;
     @Column(nullable = false)

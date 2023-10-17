@@ -14,8 +14,9 @@ public class ShipmentHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private int status;
+    private Status status;
 
     @Column(nullable = false)
     private Timestamp timestamp;
