@@ -5,6 +5,7 @@ import com.experis.no.boxinator.mappers.ProductMapper;
 import com.experis.no.boxinator.models.Product;
 import com.experis.no.boxinator.models.dto.product.ProductDTO;
 import com.experis.no.boxinator.models.dto.product.ProductPostDTO;
+import com.experis.no.boxinator.models.dto.shipment.ShipmentDTO;
 import com.experis.no.boxinator.services.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -118,5 +119,33 @@ public class ProductController {
         Product product = productService.add(productMapper.productPostDTOToProduct(entity));
         URI uri = new URI("api/v1/product/" + product.getId());
         return ResponseEntity.created(uri).build();
+    }
+    @PatchMapping
+    @Operation(summary = "Updates a Product")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Success",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema =
+                                    @Schema(implementation = ProductDTO.class)
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> editProduct(ProductDTO entity){
+        try {
+            return ResponseEntity.ok(productService.update(productMapper.productDTOToProduct(entity)));
+        }catch (ProductNotFoundException exception){
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
