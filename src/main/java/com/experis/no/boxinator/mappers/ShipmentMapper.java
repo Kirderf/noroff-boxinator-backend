@@ -17,9 +17,13 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Mapper(componentModel = "spring")
 public abstract class ShipmentMapper {
+
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     @Autowired
     private UserService userService;
     @Autowired
@@ -81,6 +85,7 @@ public abstract class ShipmentMapper {
 
     @Named(value = "shipmentToShipmentProductId")
     public List<ShipmentProductDTO> mapProductToId(Set<ShipmentProduct> value) {
+        logger.log(Level.WARNING,String.valueOf(value));
         if (value == null)
             return Collections.emptyList();
         List<ShipmentProduct> orderProductList = value.stream().map(o -> shipmentProductsServiceImpl.findById(o.getId())).toList();

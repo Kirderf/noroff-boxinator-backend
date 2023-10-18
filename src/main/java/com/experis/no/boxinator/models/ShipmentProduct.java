@@ -7,14 +7,15 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
+@Setter
+@Getter
 @Entity
 public class ShipmentProduct {
     @EmbeddedId
     private ShipmentProductsId id = new ShipmentProductsId();
 
     @ManyToOne
-    @MapsId("shipmentId")
+    @MapsId("shipmentsId")
     private Shipment shipment;
 
     @ManyToOne
@@ -22,13 +23,15 @@ public class ShipmentProduct {
     private Product product;
 
     private int quantity;
-
+    public int getProductId() {
+        return this.id.productsId;
+    }
     @Embeddable
     @Getter
     @Setter
     public static class ShipmentProductsId implements Serializable {
 
-        private int shipmentId;
+        private int shipmentsId;
         private int productsId;
 
 
