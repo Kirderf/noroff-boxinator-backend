@@ -5,10 +5,13 @@ import com.experis.no.boxinator.models.Shipment;
 import com.experis.no.boxinator.models.ShipmentProduct;
 import com.experis.no.boxinator.models.User;
 import com.experis.no.boxinator.models.dto.orderProduct.ShipmentProductDTO;
+import com.experis.no.boxinator.models.dto.orderProduct.ShipmentProductWithFullProductDTO;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentDTO;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentPostDTO;
+import com.experis.no.boxinator.models.dto.shipment.ShipmentWithFullProductDTO;
 import com.experis.no.boxinator.services.OrdersProduct.ShipmentProductsServiceImpl;
 import com.experis.no.boxinator.services.countries.CountriesService;
+import com.experis.no.boxinator.services.product.ProductService;
 import com.experis.no.boxinator.services.user.UserService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -24,6 +27,8 @@ public abstract class ShipmentMapper {
     @Autowired
     private UserService userService;
     @Autowired
+    private ProductService productService;
+    @Autowired
     private ShipmentProductsServiceImpl shipmentProductsServiceImpl;
     @Autowired
     private CountriesService countriesService;
@@ -37,8 +42,9 @@ public abstract class ShipmentMapper {
 
     @Mapping(target = "countries", qualifiedByName = "mapCountriesID")
     @Mapping(target = "user", source = "user.id")
+    @Mapping(target = "shipmentProducts", qualifiedByName = "shipmentToShipmentProductFull")
     @Named("shipmentToShipmentWithFullProductDTO")
-    public abstract ShipmentDTO shipmentToShipmentWithFullProductDTO(Shipment shipment);
+    public abstract ShipmentWithFullProductDTO shipmentToShipmentWithFullProductDTO(Shipment shipment);
 
 
     @Mapping(target = "countries", qualifiedByName = "unmapCountriesID")
@@ -54,7 +60,7 @@ public abstract class ShipmentMapper {
     public abstract Collection<ShipmentDTO> shipmentToShipmentDTO(Collection<Shipment> shipmentCollection);
 
     @IterableMapping(qualifiedByName = {"shipmentToShipmentWithFullProductDTO"})
-    public abstract Collection<ShipmentDTO> shipmentToShipmentWithFullProductDTO(Collection<Shipment> shipmentCollection);
+    public abstract Collection<ShipmentWithFullProductDTO> shipmentToShipmentWithFullProductDTO(Collection<Shipment> shipmentCollection);
 
     @Named(value = "mapCountriesID")
     String mapCountriesID(Countries countries) {
@@ -83,11 +89,23 @@ public abstract class ShipmentMapper {
     @Named(value = "shipmentToShipmentProductId")
     public List<ShipmentProductDTO> mapProductToId(Set<ShipmentProduct> value) {
         if (value == null)
-            return Collections.emptyList();
+            return null;
         List<ShipmentProduct> orderProductList = value.stream().map(o -> shipmentProductsServiceImpl.findById(o.getId())).toList();
         List<ShipmentProductDTO> orderProductDTOList = new ArrayList<>();
         for (ShipmentProduct orderProduct : orderProductList) {
             orderProductDTOList.add(new ShipmentProductDTO(orderProduct.getProduct().getId(), orderProduct.getQuantity()));
+        }
+        return orderProductDTOList;
+    }
+
+    @Named(value = "shipmentToShipmentProductFull")
+    public List<ShipmentProductWithFullProductDTO> mapShipmentProductToShipmentProductWithFullProductDTO(Set<ShipmentProduct> value) {
+        if (value == null)
+            return null;
+        List<ShipmentProduct> orderProductList = value.stream().map(o -> shipmentProductsServiceImpl.findById(o.getId())).toList();
+        List<ShipmentProductWithFullProductDTO> orderProductDTOList = new ArrayList<>();
+        for (ShipmentProduct orderProduct : orderProductList) {
+            orderProductDTOList.add(new ShipmentProductWithFullProductDTO(productService.findById(orderProduct.getProductId()), orderProduct.getQuantity()));
         }
         return orderProductDTOList;
     }

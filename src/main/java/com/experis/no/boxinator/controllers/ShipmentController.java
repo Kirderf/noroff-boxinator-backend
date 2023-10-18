@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(path = "api/v1/shipment")
@@ -37,6 +39,7 @@ public class ShipmentController {
     private final ShipmentHistoryService historyService;
     private final ShipmentMapper shipmentMapper;
     private final ShipmentHistoryMapper historyMapper;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public ShipmentController(ShipmentService shipmentService, UserService userService, ShipmentHistoryService historyService, ShipmentMapper shipmentMapper, ShipmentHistoryMapper historyMapper) {
         this.shipmentService = shipmentService;
@@ -104,6 +107,7 @@ public class ShipmentController {
     public ResponseEntity<?> findByUserId(@PathVariable String id, @RequestParam(required = false) Boolean fullProduct) {
         if (fullProduct == null) fullProduct = false;
         try {
+            logger.log(Level.INFO,fullProduct.toString());
             if (!fullProduct) {
                 return ResponseEntity.ok(
                         shipmentMapper.shipmentToShipmentDTO(
