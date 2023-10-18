@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.hibernate.MappingException;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -225,7 +226,7 @@ public class ShipmentController {
             );
         } catch (ShipmentNotFoundException shipmentNotFoundException) {
             return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | MappingException e) {
             return ResponseEntity.badRequest().build();
         }
     }
