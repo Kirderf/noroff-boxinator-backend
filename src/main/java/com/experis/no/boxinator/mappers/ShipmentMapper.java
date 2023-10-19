@@ -12,16 +12,17 @@ import com.experis.no.boxinator.models.dto.shipment.ShipmentWithFullProductDTO;
 import com.experis.no.boxinator.services.OrdersProduct.ShipmentProductsServiceImpl;
 import com.experis.no.boxinator.services.countries.CountriesService;
 import com.experis.no.boxinator.services.product.ProductService;
-import com.experis.no.boxinator.services.shipment.ShipmentService;
 import com.experis.no.boxinator.services.user.UserService;
-import org.hibernate.MappingException;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public abstract class ShipmentMapper {
@@ -30,8 +31,6 @@ public abstract class ShipmentMapper {
     private UserService userService;
     @Autowired
     private ProductService productService;
-    @Autowired
-    private ShipmentService shipmentService;
     @Autowired
     private ShipmentProductsServiceImpl shipmentProductsServiceImpl;
     @Autowired
@@ -53,7 +52,6 @@ public abstract class ShipmentMapper {
 
     @Mapping(target = "countries", qualifiedByName = "unmapCountriesID")
     @Mapping(target = "user", qualifiedByName = "userIdToUser")
-    @Mapping(target = "shipmentProducts", qualifiedByName = "unshipmentToShipmentProductId")
     public abstract Shipment shipmentDTOToShipment(ShipmentDTO shipmentDTO);
 
 
@@ -98,7 +96,7 @@ public abstract class ShipmentMapper {
         List<ShipmentProduct> orderProductList = value.stream().map(o -> shipmentProductsServiceImpl.findById(o.getId())).toList();
         List<ShipmentProductDTO> orderProductDTOList = new ArrayList<>();
         for (ShipmentProduct orderProduct : orderProductList) {
-            orderProductDTOList.add(new ShipmentProductDTO(orderProduct.getProduct().getId(), orderProduct.getQuantity(), orderProduct.getShipment().getId()));
+            orderProductDTOList.add(new ShipmentProductDTO(orderProduct.getProduct().getId(), orderProduct.getQuantity()));
         }
         return orderProductDTOList;
     }
@@ -110,33 +108,8 @@ public abstract class ShipmentMapper {
         List<ShipmentProduct> orderProductList = value.stream().map(o -> shipmentProductsServiceImpl.findById(o.getId())).toList();
         List<ShipmentProductWithFullProductDTO> orderProductDTOList = new ArrayList<>();
         for (ShipmentProduct orderProduct : orderProductList) {
-            orderProductDTOList.add(new ShipmentProductWithFullProductDTO(productService.findById(orderProduct.getProductId()), orderProduct.getQuantity(), orderProduct.getShipment().getId()));
+            orderProductDTOList.add(new ShipmentProductWithFullProductDTO(productService.findById(orderProduct.getProductId()), orderProduct.getQuantity()));
         }
         return orderProductDTOList;
-    }
-
-    @Named(value = "unshipmentToShipmentProductId")
-    public Set<ShipmentProduct> unmapProductToId(List<ShipmentProductDTO> value) {
-        try {
-            if (value == null)
-                return null;
-            List<ShipmentProductDTO> orderProductList = value.stream().toList();
-            Set<ShipmentProduct> orderProductDTOList = new HashSet<>();
-            for (ShipmentProductDTO orderProduct : orderProductList) {
-                ShipmentProduct shipmentProduct = new ShipmentProduct();
-                shipmentProduct.setProduct(productService.findById(orderProduct.getProductId()));
-                shipmentProduct.setShipment(shipmentService.findById(orderProduct.getShipmentId()));
-                shipmentProduct.setQuantity(orderProduct.getQuantity());
-                ShipmentProduct.ShipmentProductsId shipmentProduct1 = new ShipmentProduct.ShipmentProductsId();
-                shipmentProduct1.setProductsId(orderProduct.getProductId());
-                shipmentProduct1.setShipmentsId(orderProduct.getShipmentId());
-                shipmentProduct.setId(shipmentProduct1);
-                orderProductDTOList.add(shipmentProduct);
-            }
-            return orderProductDTOList;
-        } catch (Exception e) {
-            throw new MappingException("MAPPING ERROR");
-        }
-
     }
 }

@@ -6,12 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ShipmentProductWithFullProductDTO {
-    public ShipmentProductWithFullProductDTO(Product product, int quantity, int shipmentId) {
-        this.shipmentId = shipmentId;
+    public ShipmentProductWithFullProductDTO(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
     }
-    private int shipmentId;
     private Product product;
     private int quantity;
 }

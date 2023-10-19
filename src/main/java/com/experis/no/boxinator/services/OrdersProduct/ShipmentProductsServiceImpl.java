@@ -20,31 +20,36 @@ public class ShipmentProductsServiceImpl implements ShipmentProductsService {
     }
 
     @Override
+    @Deprecated
     public ShipmentProduct findById(Integer integer) {
         return null;
     }
 
     @Override
+    @Deprecated
     public Collection<ShipmentProduct> findAll() {
         return null;
     }
 
     @Override
     public ShipmentProduct add(ShipmentProduct entity) {
-        return null;
+        return ordersProductRepository.save(entity);
     }
 
     @Override
+    @Deprecated
     public ShipmentProduct update(ShipmentProduct entity) {
         return null;
     }
 
     @Override
+    @Deprecated
     public void delete(Integer integer) {
 
     }
 
     @Override
+    @Deprecated
     public boolean exists(Integer integer) {
         return false;
     }
