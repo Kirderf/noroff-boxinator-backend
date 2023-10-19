@@ -101,9 +101,6 @@ public class UserController {
     })
     @PreAuthorize("hasAuthority('ID_' + #entity.id) or hasRole('ADMIN')")
     public ResponseEntity<?> add(@RequestBody UserPostDTO entity) throws URISyntaxException {
-        if (userService.exists(entity.getId())) {
-            return ResponseEntity.badRequest().build();
-        }
         User user = userService.add(userMapper.userPostDTOToUser(entity));
         URI uri = new URI("api/v1/user/" + user.getId());
         logger.log(Level.INFO, "User with this id was created: " + user.getId());
