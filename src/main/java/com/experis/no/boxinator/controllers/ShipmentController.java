@@ -6,8 +6,12 @@ import com.experis.no.boxinator.mappers.ShipmentHistoryMapper;
 import com.experis.no.boxinator.mappers.ShipmentMapper;
 import com.experis.no.boxinator.models.Shipment;
 import com.experis.no.boxinator.models.ShipmentHistory;
+import com.experis.no.boxinator.models.ShipmentProduct;
+import com.experis.no.boxinator.models.dto.orderProduct.ShipmentProductDTO;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentDTO;
 import com.experis.no.boxinator.models.dto.shipment.ShipmentPostDTO;
+import com.experis.no.boxinator.services.OrdersProduct.ShipmentProductsService;
+import com.experis.no.boxinator.services.product.ProductService;
 import com.experis.no.boxinator.services.shipment.ShipmentService;
 import com.experis.no.boxinator.services.shipmenthistory.ShipmentHistoryService;
 import com.experis.no.boxinator.services.user.UserService;
@@ -39,15 +43,19 @@ public class ShipmentController {
     private final UserService userService;
     private final ShipmentHistoryService historyService;
     private final ShipmentMapper shipmentMapper;
+    private final ShipmentProductsService shipmentProductsService;
     private final ShipmentHistoryMapper historyMapper;
+    private final ProductService productService;
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public ShipmentController(ShipmentService shipmentService, UserService userService, ShipmentHistoryService historyService, ShipmentMapper shipmentMapper, ShipmentHistoryMapper historyMapper) {
+    public ShipmentController(ShipmentService shipmentService, UserService userService, ShipmentHistoryService historyService, ShipmentMapper shipmentMapper, ShipmentProductsService shipmentProductsService, ShipmentHistoryMapper historyMapper, ProductService productService) {
         this.shipmentService = shipmentService;
         this.userService = userService;
         this.historyService = historyService;
         this.shipmentMapper = shipmentMapper;
+        this.shipmentProductsService = shipmentProductsService;
         this.historyMapper = historyMapper;
+        this.productService = productService;
     }
 
     @GetMapping
@@ -108,7 +116,7 @@ public class ShipmentController {
     public ResponseEntity<?> findByUserId(@PathVariable String id, @RequestParam(required = false) Boolean fullProduct) {
         if (fullProduct == null) fullProduct = false;
         try {
-            logger.log(Level.INFO,fullProduct.toString());
+            logger.log(Level.INFO, fullProduct.toString());
             if (!fullProduct) {
                 return ResponseEntity.ok(
                         shipmentMapper.shipmentToShipmentDTO(
@@ -188,6 +196,14 @@ public class ShipmentController {
         URI uri;
         try {
             Shipment shipment = shipmentService.add(shipmentMapper.shipmentPostDTOToShipment(entity));
+            for (ShipmentProductDTO dto : entity.getShipmentProducts()
+            ) {
+                ShipmentProduct shipmentProduct = new ShipmentProduct();
+                shipmentProduct.setShipment(shipment);
+                shipmentProduct.setQuantity(dto.getQuantity());
+                shipmentProduct.setProduct(productService.findById(dto.getProductId()));
+                shipmentProductsService.add(shipmentProduct);
+            }
             uri = new URI("api/v1/shipment/" + shipment.getId());
         } catch (URISyntaxException e) {
             return ResponseEntity.internalServerError().build();
