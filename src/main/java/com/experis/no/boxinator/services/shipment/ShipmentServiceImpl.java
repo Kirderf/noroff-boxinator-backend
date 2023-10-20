@@ -3,8 +3,8 @@ package com.experis.no.boxinator.services.shipment;
 import com.experis.no.boxinator.exceptions.ShipmentNotFoundException;
 import com.experis.no.boxinator.models.Shipment;
 import com.experis.no.boxinator.models.ShipmentHistory;
-import com.experis.no.boxinator.repositories.ShipmentHistoryRepository;
 import com.experis.no.boxinator.repositories.ShipmentRepository;
+import com.experis.no.boxinator.services.shipmenthistory.ShipmentHistoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -12,11 +12,11 @@ import java.util.Collection;
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
     private final ShipmentRepository shipmentRepository;
-    private final ShipmentHistoryRepository historyRepository;
+    private final ShipmentHistoryService shipmentHistoryService;
 
-    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentHistoryRepository historyRepository) {
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository, ShipmentHistoryService shipmentHistoryService) {
         this.shipmentRepository = shipmentRepository;
-        this.historyRepository = historyRepository;
+        this.shipmentHistoryService = shipmentHistoryService;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             history.setShipment(shipmentInDB);
             history.setStatus(shipmentInDB.getStatus());
             history.setTimestamp(shipmentInDB.getTimestamp());
-            historyRepository.save(history);
+            shipmentHistoryService.updateShipmentHistory(history);
         }
         return shipmentRepository.save(entity);
     }
