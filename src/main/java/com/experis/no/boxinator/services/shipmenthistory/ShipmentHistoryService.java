@@ -7,4 +7,6 @@ import java.util.Collection;
 
 public interface ShipmentHistoryService extends CrudService<ShipmentHistory, Integer> {
     Collection<ShipmentHistory> findAllByShipmentID(Integer id);
+
+    ShipmentHistory updateShipmentHistory(ShipmentHistory shipmentHistory);
 }

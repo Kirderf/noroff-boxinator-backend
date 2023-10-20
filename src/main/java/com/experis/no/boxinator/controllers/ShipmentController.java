@@ -1,5 +1,6 @@
 package com.experis.no.boxinator.controllers;
 
+import com.experis.no.boxinator.exceptions.ShipmentHistoryNotFoundException;
 import com.experis.no.boxinator.exceptions.ShipmentNotFoundException;
 import com.experis.no.boxinator.exceptions.UserNotFoundException;
 import com.experis.no.boxinator.mappers.ShipmentHistoryMapper;
@@ -32,9 +33,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(path = "api/v1/shipment")
@@ -46,7 +47,6 @@ public class ShipmentController {
     private final ShipmentProductsService shipmentProductsService;
     private final ShipmentHistoryMapper historyMapper;
     private final ProductService productService;
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public ShipmentController(ShipmentService shipmentService, UserService userService, ShipmentHistoryService historyService, ShipmentMapper shipmentMapper, ShipmentProductsService shipmentProductsService, ShipmentHistoryMapper historyMapper, ProductService productService) {
         this.shipmentService = shipmentService;
@@ -117,7 +117,6 @@ public class ShipmentController {
         if (fullProduct == null) fullProduct = false;
         if (guest == null) guest = false;
         try {
-            logger.log(Level.INFO, fullProduct.toString());
             if (guest) {
                 return ResponseEntity.ok(
                         shipmentMapper.shipmentToShipmentWithFullProductDTO(
@@ -217,10 +216,11 @@ public class ShipmentController {
                 shipmentProduct.setProduct(productService.findById(dto.getProductId()));
                 shipmentProductsService.add(shipmentProduct);
             }
+            updateShipmentHistory(shipment);
             uri = new URI("api/v1/shipment/" + shipment.getId());
         } catch (URISyntaxException e) {
             return ResponseEntity.internalServerError().build();
-        } catch (UserNotFoundException userNotFoundException) {
+        } catch (UserNotFoundException | ShipmentHistoryNotFoundException userNotFoundException) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.created(uri).build();
@@ -247,15 +247,18 @@ public class ShipmentController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateShipment(@RequestBody ShipmentDTO entity) {
         try {
+            Shipment shipment = shipmentMapper.shipmentDTOToShipment(entity);
+            updateShipmentHistory(shipment);
+
             return ResponseEntity.ok(
                     shipmentMapper.shipmentToShipmentDTO(
-                            shipmentService.update(shipmentMapper.shipmentDTOToShipment(entity))
+                            shipmentService.update(shipment)
                     )
 
             );
         } catch (ShipmentNotFoundException shipmentNotFoundException) {
             return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException | MappingException e) {
+        } catch (IllegalArgumentException | MappingException | ShipmentHistoryNotFoundException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -323,4 +326,11 @@ public class ShipmentController {
         return false;
     }
 
+    private void updateShipmentHistory(Shipment shipment) throws ShipmentHistoryNotFoundException {
+        ShipmentHistory shipmentHistory = new ShipmentHistory();
+        shipmentHistory.setStatus(shipment.getStatus());
+        shipmentHistory.setShipment(shipment);
+        shipmentHistory.setTimestamp(Timestamp.from(Instant.now()));
+        historyService.updateShipmentHistory(shipmentHistory);
+    }
 }

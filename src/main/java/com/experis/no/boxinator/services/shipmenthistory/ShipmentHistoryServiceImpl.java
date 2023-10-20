@@ -49,4 +49,14 @@ public class ShipmentHistoryServiceImpl implements ShipmentHistoryService {
     public Collection<ShipmentHistory> findAllByShipmentID(Integer id) {
         return shipmentHistoryRepository.getAllByShipment_Id(id);
     }
+
+    @Override
+    public ShipmentHistory updateShipmentHistory(ShipmentHistory shipmentHistory) {
+        if (!(shipmentHistoryRepository.existsShipmentHistoryByShipment_IdAndStatus(shipmentHistory.getShipment().getId(),shipmentHistory.getStatus()))){
+            return shipmentHistoryRepository.save(shipmentHistory);
+        }
+        return null;
+    }
+
+
 }
