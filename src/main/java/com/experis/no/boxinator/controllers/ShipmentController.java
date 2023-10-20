@@ -113,10 +113,20 @@ public class ShipmentController {
             )
     })
     @PreAuthorize("hasAuthority('ID_' + #id) or hasRole('ADMIN')")
-    public ResponseEntity<?> findByUserId(@PathVariable String id, @RequestParam(required = false) Boolean fullProduct) {
+    public ResponseEntity<?> findByUserId(@PathVariable String id, @RequestParam(required = false) Boolean fullProduct, @RequestParam(required = false) Boolean guest) {
         if (fullProduct == null) fullProduct = false;
+        if (guest == null) guest = false;
         try {
             logger.log(Level.INFO, fullProduct.toString());
+            if (guest){
+                return ResponseEntity.ok(
+                        shipmentMapper.shipmentToShipmentDTO(
+                                shipmentService.findByEmailAndGuest(
+                                        userService.findById(id).getEmail()
+                                )
+                        )
+                );
+            }
             if (!fullProduct) {
                 return ResponseEntity.ok(
                         shipmentMapper.shipmentToShipmentDTO(
