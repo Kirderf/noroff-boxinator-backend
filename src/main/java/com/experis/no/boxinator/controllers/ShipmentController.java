@@ -35,7 +35,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(path = "api/v1/shipment")
@@ -47,6 +48,8 @@ public class ShipmentController {
     private final ShipmentProductsService shipmentProductsService;
     private final ShipmentHistoryMapper historyMapper;
     private final ProductService productService;
+
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public ShipmentController(ShipmentService shipmentService, UserService userService, ShipmentHistoryService historyService, ShipmentMapper shipmentMapper, ShipmentProductsService shipmentProductsService, ShipmentHistoryMapper historyMapper, ProductService productService) {
         this.shipmentService = shipmentService;
@@ -247,9 +250,11 @@ public class ShipmentController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateShipment(@RequestBody ShipmentDTO entity) {
         try {
+            logger.log(Level.INFO,"Mapping a shipmentDTO");
             Shipment shipment = shipmentMapper.shipmentDTOToShipment(entity);
+            logger.log(Level.INFO,"Adding a shipmentHistory");
             updateShipmentHistory(shipment);
-
+            logger.log(Level.INFO,"Updating a shipment");
             return ResponseEntity.ok(
                     shipmentMapper.shipmentToShipmentDTO(
                             shipmentService.update(shipment)
