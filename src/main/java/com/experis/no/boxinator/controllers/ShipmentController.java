@@ -118,7 +118,7 @@ public class ShipmentController {
         if (guest == null) guest = false;
         try {
             logger.log(Level.INFO, fullProduct.toString());
-            if (guest){
+            if (guest) {
                 return ResponseEntity.ok(
                         shipmentMapper.shipmentToShipmentWithFullProductDTO(
                                 shipmentService.findByEmailAndGuest(
@@ -146,7 +146,7 @@ public class ShipmentController {
         }
     }
 
-    @PatchMapping("{shipmentId}")
+    @PatchMapping("{shipmentId}/{userid}")
     @Operation(summary = "Updates a Shipment by Email")
     @ApiResponses(value = {
             @ApiResponse(
@@ -166,28 +166,31 @@ public class ShipmentController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    @PreAuthorize("hasAuthority('ID_' + #id) or hasRole('ADMIN')")
-    public ResponseEntity<?> updateByEmail(@PathVariable Integer shipmentId, String id, @RequestParam(required = false) Boolean fullProduct) {
+    @PreAuthorize("hasAuthority('ID_' + #userid) or hasRole('ADMIN')")
+    public ResponseEntity<?> updateByShipmentID(@PathVariable Integer shipmentId, @PathVariable String userid, @RequestParam(required = false) Boolean fullProduct) {
         if (fullProduct == null) fullProduct = false;
         try {
             Shipment shipment = shipmentService.findById(shipmentId);
-            shipment.setUser(userService.findById(id));
-            shipmentService.update(shipment);
-            if (!fullProduct) {
-                return ResponseEntity.ok(
-                        shipmentMapper.shipmentToShipmentDTO(
-                                shipment
-                        )
-                );
-            } else {
-                return ResponseEntity.ok(
-                        shipmentMapper.shipmentToShipmentWithFullProductDTO(
-                                shipment
-                        )
+            if (shipment.getEmail().equals(userService.findById(userid).getEmail())) {
+                shipment.setUser(userService.findById(userid));
+                shipmentService.update(shipment);
+                if (!fullProduct) {
+                    return ResponseEntity.ok(
+                            shipmentMapper.shipmentToShipmentDTO(
+                                    shipment
+                            )
+                    );
+                } else {
+                    return ResponseEntity.ok(
+                            shipmentMapper.shipmentToShipmentWithFullProductDTO(
+                                    shipment
+                            )
 
-                );
+                    );
+                }
             }
-        } catch (ShipmentNotFoundException shipmentNotFoundException) {
+            return ResponseEntity.badRequest().build();
+        } catch (ShipmentNotFoundException | UserNotFoundException NotFoundException) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -257,6 +260,7 @@ public class ShipmentController {
         }
     }
 
+
     @GetMapping("{id}/history")
     @Operation(summary = "Gets a Shipments History by ID")
     @ApiResponses(value = {
@@ -276,6 +280,7 @@ public class ShipmentController {
             )
     })
     @PreAuthorize("hasAuthority('ID_' + #uid) or hasRole('ADMIN')")
+    @Deprecated(since = "user id is not working")
     public ResponseEntity<?> findHistoryById(@PathVariable int id, String uid) {
         try {
             //Check if the user has the right access
