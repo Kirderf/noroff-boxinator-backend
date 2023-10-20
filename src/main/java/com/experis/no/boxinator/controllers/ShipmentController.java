@@ -120,7 +120,7 @@ public class ShipmentController {
             logger.log(Level.INFO, fullProduct.toString());
             if (guest){
                 return ResponseEntity.ok(
-                        shipmentMapper.shipmentToShipmentDTO(
+                        shipmentMapper.shipmentToShipmentWithFullProductDTO(
                                 shipmentService.findByEmailAndGuest(
                                         userService.findById(id).getEmail()
                                 )
