@@ -282,32 +282,14 @@ public class ShipmentController {
                             schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    @PreAuthorize("hasAuthority('ID_' + #uid) or hasRole('ADMIN')")
-    @Deprecated(since = "user id is not working")
-    public ResponseEntity<?> findHistoryById(@PathVariable int id, String uid) {
+    public ResponseEntity<?> findHistoryById(@PathVariable int id) {
         try {
-            //Check if the user has the right access
-            if (!hasUserRole("ADMIN")) {
-                boolean shipmentFoundWithUserID = false;
-                Collection<Shipment> shipments = shipmentService.findByUserID(uid);
-                if (shipments == null) {
-                    throw new ShipmentNotFoundException(id);
-                }
-                for (Shipment shipment : shipments) {
-                    if (shipment.getId() == id) {
-                        shipmentFoundWithUserID = true;
-                        break;
-                    }
-                }
-                if (!shipmentFoundWithUserID) {
-                    throw new ShipmentNotFoundException(id);
-                }
-            }
             return ResponseEntity.ok(
-                    historyMapper.shipmentHistoryToShipmentHistoryDTO(historyService.findAllByShipmentID(id))
+                    historyMapper.shipmentHistoryToShipmentHistoryDTO(
+                            historyService.findAllByShipmentID(id))
 
             );
-        } catch (ShipmentNotFoundException shipmentNotFoundException) {
+        } catch (ShipmentHistoryNotFoundException shipmentHistoryNotFoundException) {
             return ResponseEntity.notFound().build();
         }
     }
