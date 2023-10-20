@@ -52,7 +52,7 @@ public class ShipmentHistoryServiceImpl implements ShipmentHistoryService {
 
     @Override
     public ShipmentHistory updateShipmentHistory(ShipmentHistory shipmentHistory) {
-        if (!(shipmentHistoryRepository.existsShipmentHistoryByShipment_IdAndStatus(shipmentHistory.getShipment().getId(),shipmentHistory.getStatus()))){
+        if (!shipmentHistoryRepository.existsShipmentHistoryByShipment_IdAndStatus(shipmentHistory.getShipment().getId(),shipmentHistory.getStatus())){
             return shipmentHistoryRepository.save(shipmentHistory);
         }
         return null;

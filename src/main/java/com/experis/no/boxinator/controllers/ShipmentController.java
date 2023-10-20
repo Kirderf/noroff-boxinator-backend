@@ -2,7 +2,6 @@ package com.experis.no.boxinator.controllers;
 
 import com.experis.no.boxinator.exceptions.ShipmentHistoryNotFoundException;
 import com.experis.no.boxinator.exceptions.ShipmentNotFoundException;
-import com.experis.no.boxinator.exceptions.UserNotFoundException;
 import com.experis.no.boxinator.mappers.ShipmentHistoryMapper;
 import com.experis.no.boxinator.mappers.ShipmentMapper;
 import com.experis.no.boxinator.models.Shipment;
@@ -22,13 +21,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.hibernate.MappingException;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -192,7 +187,7 @@ public class ShipmentController {
                 }
             }
             return ResponseEntity.badRequest().build();
-        } catch (ShipmentNotFoundException | UserNotFoundException NotFoundException) {
+        } catch (Exception exception) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -223,7 +218,7 @@ public class ShipmentController {
             uri = new URI("api/v1/shipment/" + shipment.getId());
         } catch (URISyntaxException e) {
             return ResponseEntity.internalServerError().build();
-        } catch (UserNotFoundException | ShipmentHistoryNotFoundException userNotFoundException) {
+        } catch (Exception exception) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.created(uri).build();
@@ -250,11 +245,11 @@ public class ShipmentController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateShipment(@RequestBody ShipmentDTO entity) {
         try {
-            logger.log(Level.INFO,"Mapping a shipmentDTO");
+            logger.log(Level.INFO, "Mapping a shipmentDTO");
             Shipment shipment = shipmentMapper.shipmentDTOToShipment(entity);
-            logger.log(Level.INFO,"Adding a shipmentHistory");
+            logger.log(Level.INFO, "Adding a shipmentHistory");
             updateShipmentHistory(shipment);
-            logger.log(Level.INFO,"Updating a shipment");
+            logger.log(Level.INFO, "Updating a shipment");
             return ResponseEntity.ok(
                     shipmentMapper.shipmentToShipmentDTO(
                             shipmentService.update(shipment)
@@ -263,7 +258,7 @@ public class ShipmentController {
             );
         } catch (ShipmentNotFoundException shipmentNotFoundException) {
             return ResponseEntity.notFound().build();
-        } catch (IllegalArgumentException | MappingException | ShipmentHistoryNotFoundException e) {
+        } catch (Exception exception) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -297,20 +292,6 @@ public class ShipmentController {
         } catch (ShipmentHistoryNotFoundException shipmentHistoryNotFoundException) {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    private boolean hasUserRole(String role) {
-        // Get the current authentication
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.getAuthorities() != null) {
-            for (GrantedAuthority authority : authentication.getAuthorities()) {
-                if (("ROLE_" + role).equals(authority.getAuthority())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     private void updateShipmentHistory(Shipment shipment) throws ShipmentHistoryNotFoundException {
