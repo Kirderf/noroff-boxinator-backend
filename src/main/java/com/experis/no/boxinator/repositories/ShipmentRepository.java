@@ -12,4 +12,5 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Integer> {
     Collection<Shipment> findShipmentsByEmailIgnoreCase(String email);
 
     Collection<Shipment> findShipmentsByUserId(String userId);
+    Collection<Shipment> findShipmentsByEmailIgnoreCaseAndUserNull(String email);
 }
