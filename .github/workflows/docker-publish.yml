@@ -119,5 +119,5 @@ jobs:
         app-name: 'boxinator2'
         slot-name: 'production'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        images: 'index.docker.io/${{env.USERNAME}}/noroff-boxinator-backend@${{ needs.build.outputs.DIGEST }}'
+        images: 'index.docker.io/${{env.USERNAME}}/noroff-boxinator-backend@${{ needs.build.outputs.digest }}'
 
