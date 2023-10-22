@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'boxinator2'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_2fffc7ad1cc647b0baedd4d1cc26c552 }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_96b32edfd646475e99f3121ccdd0b372 }}/kirderf/noroff-boxinator-backend:${{ github.sha }}'
