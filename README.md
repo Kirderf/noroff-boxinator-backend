@@ -72,9 +72,8 @@ The service will start on port `8080` by default. This can be changed in the `ap
 Boxinator utilizes Keycloak for managing user authentication and role-based access control. To configure RBAC:
 
 1. Set up a Keycloak instance and create a new realm for Boxinator.
-2. Define user roles such as `ADMIN`, `USER`, etc.
+2. Define user role `ADMIN`.
 3. Configure the Boxinator Spring Boot application to integrate with Keycloak. This involves setting the Keycloak server URL, realm, client ID, etc., in the `application.properties` file.
-4. Ensure the necessary role checks are defined using the `@PreAuthorize` annotations in the codebase.
 
 For detailed Keycloak setup and integration, refer to [Keycloak's official documentation](https://www.keycloak.org/documentation.html).
 
