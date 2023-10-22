@@ -98,6 +98,9 @@ jobs:
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
 
+    outputs:
+      digest: ${{ steps.build-and-push.outputs.digest }}
+
   deploy:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -111,11 +114,10 @@ jobs:
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       env:
-        TAGS: ${{ steps.meta.outputs.tags }}
-      
+        DIGEST: ${{ steps.build-and-push.outputs.digest }}
       with:
         app-name: 'boxinator2'
         slot-name: 'production'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        images: 'index.docker.io/${{env.USERNAME}}/noroff-boxinator-backend:${TAGS}'
+        images: 'index.docker.io/${{env.USERNAME}}/noroff-boxinator-backend@${{ needs.build.outputs.DIGEST }}'
 
