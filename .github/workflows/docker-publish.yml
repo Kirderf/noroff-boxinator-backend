@@ -97,6 +97,7 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+
   deploy:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -106,15 +107,15 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    - name: Extract primary tag
-      id: extract-tag
-      run: echo "::set-output name=tag::$(echo '${{ steps.build-and-push.outputs.tags }}' | cut -d',' -f1)"
-
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
+      env:
+        TAGS: ${{ steps.meta.outputs.tags }}
+      
       with:
         app-name: 'boxinator2'
         slot-name: 'production'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        images: 'index.docker.io/${{env.USERNAME}}/noroff-boxinator-backend:${{ steps.extract-tag.outputs.tag }}'
+        images: 'index.docker.io/${{env.USERNAME}}/noroff-boxinator-backend:${TAGS}'
+
