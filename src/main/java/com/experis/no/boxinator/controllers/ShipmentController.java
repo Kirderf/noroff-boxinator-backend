@@ -159,7 +159,7 @@ public class ShipmentController {
      * @return ResponseEntity containing updated shipment details.
      */
     @PatchMapping("{shipmentId}/{userid}")
-    @Operation(summary = "Updates a Shipment by Email")
+    @Operation(summary = "Updates a Shipments Email by UserID")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
