@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN gradle bootJar
 
-FROM openjdk:17 AS runtime
+FROM openjdk:22-slim AS runtime
 WORKDIR /app
 ARG JAR_FILE=/app/build/libs/*.jar
 COPY --from=build ${JAR_FILE} /app/app.jar
