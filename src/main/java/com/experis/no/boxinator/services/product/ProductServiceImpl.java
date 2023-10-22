@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Collection<Product> getAllActive(boolean isActive) {
+    public Collection<Product> findAll(boolean isActive) {
         return productRepository.getProductsByisActiveIs(isActive);
     }
 }

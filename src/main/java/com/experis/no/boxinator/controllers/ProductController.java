@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(path = "api/v1/product")
 public class ProductController {
     private final ProductService productService;
     private final ProductMapper productMapper;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public ProductController(ProductService productService, ProductMapper productMapper) {
         this.productService = productService;
@@ -42,15 +45,26 @@ public class ProductController {
                             @Content(mediaType = "application/json",
                                     array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(
-                productMapper.productToProductDTO(
-                        productService.findAll()
-                )
+        logger.info("Getting all products");
+        Collection<ProductDTO> dtos = productMapper.productToProductDTO(
+                productService.findAll()
         );
+        logger.info("Found " + dtos.size() + " products");
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping(params = "active")
@@ -66,11 +80,12 @@ public class ProductController {
             )
     })
     public ResponseEntity<?> findAll(@PathParam("active") boolean active) {
-        return ResponseEntity.ok(
-                productMapper.productToProductDTO(
-                        productService.getAllActive(active)
-                )
+        logger.info("Getting all active products");
+        Collection<ProductDTO> dtos = productMapper.productToProductDTO(
+                productService.findAll(active)
         );
+        logger.info("Found " + dtos.size() + " active products");
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("{id}")
@@ -92,14 +107,15 @@ public class ProductController {
             )
     })
     public ResponseEntity<?> findById(@PathVariable int id) {
+        logger.info("Getting product with id " + id);
         try {
-            return ResponseEntity.ok(
-                    productMapper.productToProductDTO(
-                            productService.findById(id)
-                    )
-
+            ProductDTO dto = productMapper.productToProductDTO(
+                    productService.findById(id)
             );
+            logger.info("Found product with id " + id);
+            return ResponseEntity.ok(dto);
         } catch (ProductNotFoundException productNotFoundException) {
+            logger.warning("Product with id " + id + " not found");
             return ResponseEntity.notFound().build();
         }
     }
@@ -111,12 +127,24 @@ public class ProductController {
                     responseCode = "201",
                     description = "Created",
                     content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> add(@RequestBody ProductPostDTO entity) throws URISyntaxException {
+        logger.info("Adding new product");
         Product product = productService.add(productMapper.productPostDTOToProduct(entity));
         URI uri = new URI("api/v1/product/" + product.getId());
+        logger.info("Added new product with id " + product.getId());
         return ResponseEntity.created(uri).build();
     }
 
@@ -129,7 +157,7 @@ public class ProductController {
                     content = {
                             @Content(mediaType = "application/json",
                                     schema =
-                                    @Schema(implementation = ProductDTO.class)
+                                    @Schema(implementation = Product.class)
                             )
                     }
             ),
@@ -138,20 +166,32 @@ public class ProductController {
                     description = "Not Found",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> editProduct(@RequestBody ProductDTO entity) {
+        logger.info("Updating product with id " + entity.getId());
         try {
             if (!productService.exists(entity.getId())) {
                 throw new ProductNotFoundException(entity.getId());
             }
-            return ResponseEntity.ok(
-                    productService.update(
-                            productMapper.productDTOToProduct(entity)
-                    )
+            Product product = productService.update(
+                    productMapper.productDTOToProduct(entity)
             );
+            logger.info("Updated product with id " + entity.getId());
+            return ResponseEntity.ok(product);
         } catch (ProductNotFoundException exception) {
+            logger.warning("Product with id " + entity.getId() + " not found");
             return ResponseEntity.badRequest().build();
         }
     }

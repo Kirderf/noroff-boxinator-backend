@@ -18,12 +18,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(path = "api/v1/countries")
 public class CountriesController {
     private final CountriesService countriesService;
     private final CountriesMapper countriesMapper;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public CountriesController(CountriesService countriesService, CountriesMapper countriesMapper) {
         this.countriesService = countriesService;
@@ -43,15 +46,16 @@ public class CountriesController {
             )
     })
     public ResponseEntity<?> findAll() {
-        return ResponseEntity.ok(
-                countriesMapper.countriesToCountriesDTO(
-                        countriesService.findAll()
-                )
+        logger.info("Fetching all countries.");
+        Collection<CountriesDTO> countries = countriesMapper.countriesToCountriesDTO(
+                countriesService.findAll()
         );
+        logger.info("Successfully fetched all countries.");
+        return ResponseEntity.ok(countries);
     }
 
     @GetMapping("{id}")
-    @Operation(summary = "Gets a country by countryCode (Example us for United states)")
+    @Operation(summary = "Gets a country by countryCode (Example US for United states)")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -69,14 +73,15 @@ public class CountriesController {
             )
     })
     public ResponseEntity<?> findById(@PathVariable String id) {
+        logger.info("Fetching country with countryCode: " + id);
         try {
-            return ResponseEntity.ok(
-                    countriesMapper.countriesToCountriesDTO(
-                            countriesService.findById(id)
-                    )
-
+            CountriesDTO countriesDTO = countriesMapper.countriesToCountriesDTO(
+                    countriesService.findById(id)
             );
+            logger.info("Successfully fetched country with countryCode: " + id);
+            return ResponseEntity.ok(countriesDTO);
         } catch (CountriesNotFoundException countriesNotFoundException) {
+            logger.warning("Country with countryCode: " + id + " not found.");
             return ResponseEntity.notFound().build();
         }
     }
@@ -88,12 +93,24 @@ public class CountriesController {
                     responseCode = "201",
                     description = "Created",
                     content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> add(@RequestBody CountriesDTO entity) throws URISyntaxException {
+        logger.info("Adding new country: " + entity.getShortName());
         Countries countries = countriesService.add(countriesMapper.countriesDTOToCountries(entity));
         URI uri = new URI("api/v1/countries/" + countries.getShortName());
+        logger.info("Successfully added new country: " + entity.getShortName());
         return ResponseEntity.created(uri).build();
     }
 }

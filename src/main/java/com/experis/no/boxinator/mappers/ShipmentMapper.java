@@ -91,25 +91,22 @@ public abstract class ShipmentMapper {
 
     @Named(value = "shipmentToShipmentProductId")
     public List<ShipmentProductDTO> mapProductToId(Set<ShipmentProduct> value) {
-        if (value == null)
-            return null;
-        List<ShipmentProduct> orderProductList = value.stream().map(o -> shipmentProductsServiceImpl.findById(o.getId())).toList();
-        List<ShipmentProductDTO> orderProductDTOList = new ArrayList<>();
-        for (ShipmentProduct orderProduct : orderProductList) {
-            orderProductDTOList.add(new ShipmentProductDTO(orderProduct.getProduct().getId(), orderProduct.getQuantity()));
-        }
-        return orderProductDTOList;
+        List<ShipmentProduct> ShipmentProductList = collectShipmentProducts(value);
+        return ShipmentProductList.stream()
+                .map(op -> new ShipmentProductDTO(op.getProduct().getId(), op.getQuantity()))
+                .toList();
     }
 
     @Named(value = "shipmentToShipmentProductFull")
     public List<ShipmentProductWithFullProductDTO> mapShipmentProductToShipmentProductWithFullProductDTO(Set<ShipmentProduct> value) {
-        if (value == null)
-            return null;
-        List<ShipmentProduct> orderProductList = value.stream().map(o -> shipmentProductsServiceImpl.findById(o.getId())).toList();
-        List<ShipmentProductWithFullProductDTO> orderProductDTOList = new ArrayList<>();
-        for (ShipmentProduct orderProduct : orderProductList) {
-            orderProductDTOList.add(new ShipmentProductWithFullProductDTO(productService.findById(orderProduct.getProductId()), orderProduct.getQuantity()));
-        }
-        return orderProductDTOList;
+        List<ShipmentProduct> ShipmentProductList = collectShipmentProducts(value);
+        return ShipmentProductList.stream()
+                .map(op -> new ShipmentProductWithFullProductDTO(productService.findById(op.getProductId()), op.getQuantity()))
+                .toList();
+    }
+
+    private List<ShipmentProduct> collectShipmentProducts(Set<ShipmentProduct> value) {
+        if (value == null) return null;
+        return value.stream().map(o -> shipmentProductsServiceImpl.findById(o.getId())).toList();
     }
 }

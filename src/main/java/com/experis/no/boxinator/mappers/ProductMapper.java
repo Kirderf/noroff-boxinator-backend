@@ -11,13 +11,11 @@ import java.util.Collection;
 @Mapper(componentModel = "spring")
 public abstract class ProductMapper {
 
-
     public abstract ProductDTO productToProductDTO(Product product);
 
     public abstract Product productPostDTOToProduct(ProductPostDTO productPostDTO);
 
     public abstract Product productDTOToProduct(ProductDTO productDTO);
-
 
     public abstract Collection<ProductDTO> productToProductDTO(Collection<Product> productCollection);
 

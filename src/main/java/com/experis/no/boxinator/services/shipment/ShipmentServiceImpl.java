@@ -6,6 +6,7 @@ import com.experis.no.boxinator.models.ShipmentHistory;
 import com.experis.no.boxinator.repositories.ShipmentRepository;
 import com.experis.no.boxinator.services.shipmenthistory.ShipmentHistoryService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 
@@ -35,9 +36,10 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    @Transactional
     public Shipment update(Shipment entity) {
         Shipment shipmentInDB = findById(entity.getId());
-        if (shipmentInDB.getStatus() != entity.getStatus()) {
+        if (!shipmentInDB.getStatus().equals(entity.getStatus())) {
             ShipmentHistory history = new ShipmentHistory();
             history.setShipment(shipmentInDB);
             history.setStatus(shipmentInDB.getStatus());
