@@ -13,7 +13,6 @@ public abstract class CountriesMapper {
 
     public abstract Countries countriesDTOToCountries(CountriesDTO countriesDTO);
 
-
     public abstract Collection<CountriesDTO> countriesToCountriesDTO(Collection<Countries> countriesCollection);
 
 }

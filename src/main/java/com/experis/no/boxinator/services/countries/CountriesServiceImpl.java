@@ -37,12 +37,12 @@ public class CountriesServiceImpl implements CountriesService {
 
     @Override
     public void delete(String string) {
-
+        countriesRepository.deleteById(string);
     }
 
     @Override
     public boolean exists(String string) {
-        return false;
+        return countriesRepository.existsById(string);
     }
 
 }

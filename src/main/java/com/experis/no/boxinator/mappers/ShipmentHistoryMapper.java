@@ -9,12 +9,7 @@ import java.util.Collection;
 @Mapper(componentModel = "spring")
 public abstract class ShipmentHistoryMapper {
 
-
     public abstract ShipmentHistoryDTO shipmentHistoryToShipmentHistoryDTO(ShipmentHistory shipmentHistory);
 
-    public abstract ShipmentHistory shipmentHistoryDTOToShipmentHistory(ShipmentHistoryDTO shipmentHistoryDTO);
-
-
     public abstract Collection<ShipmentHistoryDTO> shipmentHistoryToShipmentHistoryDTO(Collection<ShipmentHistory> shipmentHistoriesCollection);
-
 }
