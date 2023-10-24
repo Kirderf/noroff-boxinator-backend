@@ -272,7 +272,6 @@ public class ShipmentController {
         logger.info("Starting the updateShipment method.");
         try {
             Shipment shipment = shipmentMapper.shipmentDTOToShipment(entity);
-            updateShipmentHistory(shipment);
             ShipmentDTO dto = shipmentMapper.shipmentToShipmentDTO(
                     shipmentService.update(shipment)
             );
