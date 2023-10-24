@@ -39,11 +39,11 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Transactional
     public Shipment update(Shipment entity) {
         Shipment shipmentInDB = findById(entity.getId());
-        if (!shipmentInDB.getStatus().equals(entity.getStatus())) {
+        if (!(shipmentInDB.getStatus().equals(entity.getStatus()))) {
             ShipmentHistory history = new ShipmentHistory();
-            history.setShipment(shipmentInDB);
-            history.setStatus(shipmentInDB.getStatus());
-            history.setTimestamp(shipmentInDB.getTimestamp());
+            history.setShipment(entity);
+            history.setStatus(entity.getStatus());
+            history.setTimestamp(entity.getTimestamp());
             shipmentHistoryService.updateShipmentHistory(history);
         }
         return shipmentRepository.save(entity);

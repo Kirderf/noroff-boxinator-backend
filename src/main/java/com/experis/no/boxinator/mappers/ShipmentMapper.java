@@ -19,7 +19,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -92,6 +91,9 @@ public abstract class ShipmentMapper {
     @Named(value = "shipmentToShipmentProductId")
     public List<ShipmentProductDTO> mapProductToId(Set<ShipmentProduct> value) {
         List<ShipmentProduct> ShipmentProductList = collectShipmentProducts(value);
+        if (ShipmentProductList == null) {
+            return null;
+        }
         return ShipmentProductList.stream()
                 .map(op -> new ShipmentProductDTO(op.getProduct().getId(), op.getQuantity()))
                 .toList();
@@ -100,6 +102,9 @@ public abstract class ShipmentMapper {
     @Named(value = "shipmentToShipmentProductFull")
     public List<ShipmentProductWithFullProductDTO> mapShipmentProductToShipmentProductWithFullProductDTO(Set<ShipmentProduct> value) {
         List<ShipmentProduct> ShipmentProductList = collectShipmentProducts(value);
+        if (ShipmentProductList == null) {
+            return null;
+        }
         return ShipmentProductList.stream()
                 .map(op -> new ShipmentProductWithFullProductDTO(productService.findById(op.getProductId()), op.getQuantity()))
                 .toList();
