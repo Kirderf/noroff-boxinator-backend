@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.stripe:stripe-java:24.1.0-beta.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.2.16'
