@@ -184,7 +184,7 @@ public class ShipmentController {
         if (fullProduct == null) fullProduct = false;
         try {
             Shipment shipment = shipmentService.findById(shipmentId);
-            if (shipment.getEmail().equals(userService.findById(userid).getEmail())) {
+            if (shipment.getEmail().equalsIgnoreCase(userService.findById(userid).getEmail())) {
                 shipment.setUser(userService.findById(userid));
                 shipmentService.update(shipment);
                 if (!fullProduct) {
